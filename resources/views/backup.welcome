@@ -1,0 +1,1036 @@
+
+@php
+// Mencegah error jika variabel tidak terkirim
+$sliders = $sliders ?? collect();
+@endphp
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tinta Emas Indonesia School</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    @vite(['resources/css/app.css','resources/js/app.js'])
+</head>
+
+<body class="bg-gray-100 font-sans" style="font-family: 'Poppins', sans-serif;">
+
+<!-- HEADER -->
+<header id="mainHeader"
+class="fixed top-0 w-full z-50 transition-all duration-500">
+
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+
+        {{-- LOGO + NAMA --}}
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/logo-tintaemas.png') }}"
+                 class="h-10 w-10 object-contain">
+
+            <h1 class="text-sm md:text-lg font-bold text-white">
+                YAYASAN TINTA EMAS INDONESIA
+            </h1>
+        </div>
+
+        {{-- DESKTOP MENU --}}
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-white">
+
+            <a href="/" class="nav-link {{ request()->is('/') ? 'active-nav' : '' }}">Beranda</a>
+
+            {{-- PROFIL DROPDOWN --}}
+            <div class="relative group">
+                <button class="nav-link flex items-center gap-1">
+                    Profil ▾
+                </button>
+
+                <div class="dropdown">
+                    <a href="#">Yayasan</a>
+                    <a href="#">SMP</a>
+
+                    {{-- SMK + SUB --}}
+                    <div class="relative group">
+                        <a href="#" class="flex justify-between items-center">
+                            SMK ▸
+                        </a>
+
+                        <div class="dropdown-sub">
+						    <a href="#">AKL</a>
+                                    <a href="#">TE</a>
+                                    <a href="#">TJKT</a>
+                                    <a href="#">TKR</a>
+                                    <a href="#">TAB</a>
+                                    <a href="#">TSM</a>
+                        </div>
+                    </div>
+
+                    <a href="#">Struktur Yayasan</a>
+                </div>
+            </div>
+
+            <a href="{{ route('posts.all') }}" class="nav-link {{ request()->is('berita*') ? 'active-nav' : '' }}">Berita</a>
+            <a href="#" class="nav-link">Kontak</a>
+
+        </nav>
+
+        {{-- MOBILE BUTTON --}}
+        <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
+    </div>
+
+    {{-- MOBILE MENU --}}
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-900 text-white px-6 pb-6 space-y-3 text-sm">
+        <a href="/" class="block">Beranda</a>
+        <a href="#">Profil</a>
+        <a href="{{ route('posts.all') }}">Berita</a>
+        <a href="#">Kontak</a>
+    </div>
+</header>
+
+
+
+<!-- HERO -->
+<!-- HERO SLIDER SECTION -->
+<section class="relative w-full h-[300px] md:h-[450px] lg:h-[520px] overflow-hidden">
+
+    @forelse($sliders as $slider)
+
+        {{-- Slide --}}
+        <div class="absolute inset-0 slider-item {{ $loop->first ? 'opacity-100 z-10' : 'opacity-0 z-0' }} transition-opacity duration-700">
+
+            {{-- Gambar slider --}}
+            <img src="{{ asset('storage/'.$slider->image) }}"
+                 class="w-full h-full object-cover object-center">
+
+            {{-- Overlay teks --}}
+            <div class="absolute inset-0 bg-blue-900/60 flex items-center justify-center text-white text-center px-4">
+                <div>
+                    <h2 class="text-2xl md:text-4xl font-bold">
+                        SMP & SMK TINTA EMAS INDONESIA
+                    </h2>
+                    <p class="mt-2">SCHOOL FOR STUDY, CREATION, PLAY, AND GROWTH</p>
+                    <span class="mt-3 inline-block bg-yellow-400 text-black px-3 py-1 rounded font-semibold">
+                        TERAKREDITASI "A"
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+    @empty
+        <div class="h-full flex items-center justify-center bg-blue-800 text-white">
+            Tambahkan slider dari dashboard
+        </div>
+    @endforelse
+
+</section>
+{{-- SECTION BERITA TERBARU --}}
+<section class="max-w-7xl mx-auto py-12 px-4 bg-white">
+
+    <div class="flex justify-between items-center mb-6 fade-panel transition-all duration-700 ease-out">
+        <h2 class="text-2xl font-bold">Berita Terbaru</h2>
+        <a href="{{ route('posts.all') }}" class="text-blue-600 text-sm">
+    Lihat Semua </a>
+    </div>
+
+    <div class="relative overflow-hidden fade-panel transition-all duration-700 ease-out">
+
+        {{-- Tombol Prev --}}
+        <button id="prevNews"
+                class="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full z-20">
+            ❮
+        </button>
+
+        {{-- Tombol Next --}}
+        <button id="nextNews"
+                class="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full z-20">
+            ❯
+        </button>
+
+        {{-- Wrapper slide --}}
+        <div id="newsSlider" class="flex transition-transform duration-700">
+            @foreach($posts as $post)
+            <div class="min-w-full md:min-w-[33.333%] px-3">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+
+				{{-- GAMBAR DIPERKECIL --}}
+					@if($post->featured_image)
+						<img src="{{ asset('storage/'.$post->featured_image) }}"
+							class="w-full h-40 object-cover">
+						@endif
+
+						<div class="p-4">
+
+						<h3 class="font-semibold text-lg">{{ $post->title }}</h3>
+
+						{{-- DESKRIPSI MAX 3 BARIS --}}
+						<p class="text-sm text-gray-600 mt-2 line-clamp-3">
+							{{ strip_tags($post->content) }}
+						</p>
+
+						<a href="{{ route('post.show',$post->slug) }}"
+							class="text-blue-600 text-sm mt-3 inline-block">
+							Baca Selengkapnya
+						</a>
+
+    </div>
+</div>
+
+            </div>
+            @endforeach
+        </div>
+
+    </div>
+</section>
+
+{{-- MENU UTAMA SEKOLAH --}}
+<section class="max-w-7xl mx-auto py-12 px-4 bg-white">
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 fade-panel transition-all duration-700 ease-out">
+
+        {{-- SMP --}}
+        <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg">
+            <img src="/images/smp.jpg"
+                 class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
+
+            {{-- Overlay + teks (hidden default) --}}
+            <div class="absolute inset-0 bg-blue-600/70 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center text-white text-center px-4">
+                <div>
+                    <h3 class="text-xl font-bold">SMP Tinta Emas</h3>
+                    <p class="text-xs mt-2">Pendidikan karakter & prestasi</p>
+                </div>
+            </div>
+        </a>
+
+        {{-- SMK --}}
+        <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg">
+            <img src="/images/smk.jpg"
+                 class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
+
+            <div class="absolute inset-0 bg-yellow-500/70 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center text-white text-center px-4">
+                <div>
+                    <h3 class="text-xl font-bold">SMK Tinta Emas</h3>
+                    <p class="text-xs mt-2">Keahlian siap kerja & industri</p>
+                </div>
+            </div>
+        </a>
+
+        {{-- PPDB --}}
+        <a href="#ppdb-section" class="group relative overflow-hidden rounded-xl shadow-lg scroll-smooth">
+            <img src="/images/ppdb.jpg"
+                 class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
+
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center text-white text-center px-4">
+                <div>
+                    <h3 class="text-xl font-bold">PPDB Online</h3>
+                    <p class="text-xs mt-2">Penerimaan Peserta Didik Baru</p>
+                </div>
+            </div>
+        </a>
+
+        {{-- E-Learning --}}
+        <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg">
+            <img src="/images/elearning.jpg"
+                 class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
+
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center text-white text-center px-4">
+                <div>
+                    <h3 class="text-xl font-bold">E-Learning</h3>
+                    <p class="text-xs mt-2">Belajar online & materi digital</p>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+</section>
+
+
+
+{{-- ===== PANEL GALERI KEGIATAN ===== --}}
+<section class="max-w-7xl mx-auto py-12 px-4 bg-white">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        {{-- PANEL --}}
+        <div class="bg-gray-50 rounded-3xl shadow-lg p-10 fade-panel transition-all duration-700 ease-out">
+
+            {{-- JUDUL --}}
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Galeri Kegiatan</h2>
+                <p class="text-gray-500 text-sm mt-2">Dokumentasi aktivitas sekolah</p>
+            </div>
+            <div class="flex justify-center gap-4 mb-10">
+
+				<button class="filter-btn px-4 py-2 rounded bg-blue-600 text-white" data-filter="all">Semua</button>
+				<button class="filter-btn px-4 py-2 rounded bg-gray-200" data-filter="yayasan">Yayasan</button>
+				<button class="filter-btn px-4 py-2 rounded bg-gray-200" data-filter="sekolah">Sekolah</button>
+				<button class="filter-btn px-4 py-2 rounded bg-gray-200" data-filter="smp">SMP</button>
+				<button class="filter-btn px-4 py-2 rounded bg-gray-200" data-filter="smk">SMK</button>
+
+			</div>
+
+            {{-- GRID FOTO --}}
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+		@foreach($albums as $album)
+		<a href="{{ route('album.show',$album->id) }}"
+			class="gallery-item block rounded-xl shadow bg-white overflow-hidden 
+       transition-all duration-300 opacity-100 scale-100"
+			data-category="{{ strtolower($album->category) }}">
+			@php
+				$cover = $album->coverPhoto ?? $album->photos->first();
+			@endphp
+
+
+			<img src="{{ $cover ? asset('storage/'.$cover->image) : asset('images/default.jpg') }}"
+             class="w-full h-56 object-cover">
+
+			<div class="p-4">
+				<h3 class="font-bold">{{ $album->title }}</h3>
+				<p class="text-sm text-gray-500 capitalize">{{ $album->category }}</p>
+			</div>
+
+		</a>
+
+		@endforeach
+
+		</div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{{-- ===============================
+    SECTION PROFIL YAYASAN MODERN
+================================= --}}
+<section class="max-w-7xl mx-auto py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+
+    {{-- ===== PANEL VIDEO SEKOLAH ===== --}}
+    <div class="mb-20 fade-panel transition-all duration-700 ease-out">
+
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
+
+            <video autoplay muted loop playsinline
+                   class="w-full h-[250px] md:h-[450px] object-cover">
+                <source src="{{ asset('videos/video-sekolah.mp4') }}" type="video/mp4">
+            </video>
+
+            {{-- Overlay Gradient --}}
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-transparent"></div>
+
+            {{-- Text --}}
+            <div class="absolute inset-0 flex items-center justify-center">
+                <h2 class="text-white text-2xl md:text-4xl font-bold text-center px-4 drop-shadow-lg">
+                    SCHOOL FOR STUDY, CREATION, PLAY, AND GROWTH
+                </h2>
+            </div>
+
+            {{-- Controls muncul saat hover --}}
+            <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition duration-500">
+                <button onclick="toggleVideo(this)"
+                        class="bg-white/20 backdrop-blur-md text-white px-5 py-2 rounded-full border border-white/40 hover:bg-white/30 transition">
+                    ⏸ Pause
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- ===== PANEL PROFIL YAYASAN ===== --}}
+    <div class="grid md:grid-cols-2 gap-16 items-center fade-panel transition-all duration-700 ease-out">
+
+        {{-- KIRI : INFO --}}
+        <div class="space-y-6">
+
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-900">
+                Yayasan Tinta Emas Indonesia
+            </h2>
+
+            {{-- VISI --}}
+            <div>
+                <h3 class="font-semibold text-gray-800 mb-1">Visi</h3>
+                <p class="text-orange-500 font-bold text-lg leading-snug">
+                    BERKOMITMEN MEMBERIKAN LAYANAN YANG TERBAIK UNTUK
+                    GENERASI MUDA INDONESIA
+                </p>
+                <p class="font-bold text-gray-500 text-base -mt-1">
+                    MUTU TERBAIK PELAYANAN PRIMA
+                </p>
+            </div>
+
+            {{-- MISI --}}
+            <div>
+                <h3 class="font-semibold text-gray-800 mb-1">Misi</h3>
+                <ul class="text-gray-600 text-sm space-y-1 list-disc pl-5">
+                    <li>Menyelenggarakan pendidikan berkualitas.</li>
+                    <li>Membentuk karakter disiplin dan berakhlak.</li>
+                    <li>Mengembangkan potensi akademik dan non-akademik.</li>
+                    <li>Menjalin kerjasama dengan dunia usaha & industri.</li>
+                </ul>
+            </div>
+
+            {{-- DESKRIPSI --}}
+            <p class="text-gray-600 text-sm leading-relaxed">
+                Yayasan Tinta Emas Indonesia menaungi SMP dan SMK Tinta Emas
+                dengan komitmen tinggi terhadap mutu pendidikan dan pembentukan
+                karakter generasi masa depan.
+            </p>
+
+            {{-- TOMBOL PROFIL --}}
+            <a href="#"
+               class="inline-block mt-3 bg-blue-900 text-white px-6 py-3 rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition duration-300">
+                Lihat Profil Lengkap →
+            </a>
+        </div>
+
+        {{-- KANAN : FOTO PEMILIK --}}
+        <div class="text-center relative">
+
+            <div class="absolute -inset-2 bg-gradient-to-tr from-blue-600 to-yellow-400 rounded-3xl blur-xl opacity-30"></div>
+
+            <img src="{{ asset('images/pemilik-yayasan.jpg') }}"
+                 class="relative rounded-3xl shadow-2xl w-80 mx-auto object-cover">
+
+            <h4 class="mt-6 text-lg font-bold text-gray-800">
+                Nama Pemilik Yayasan
+            </h4>
+
+            <p class="text-sm text-gray-500">
+                Founder & Pembina Yayasan
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{{-- ===============================
+    SECTION CALL TO ACTION PPDB
+================================= --}}
+<section id="ppdb-section" class="relative py-24 bg-cover bg-center fade-panel transition-all duration-700 ease-out
+         style="background-image: url('{{ asset('images/bg-ppdb.jpg') }}')">
+
+    {{-- Overlay --}}
+	
+    <div class="absolute inset-0 bg-blue-900/80"></div>
+
+    <div class="relative max-w-5xl mx-auto text-center px-6 text-white">
+
+        {{-- Heading --}}
+        <h2 class="text-3xl md:text-5xl font-bold leading-tight mb-6">
+            Ayo Bergabung Bersama<br>
+            <span class="text-yellow-400">Yayasan Tinta Emas Indonesia</span>
+        </h2>
+
+        {{-- Sub --}}
+        <p class="text-white/90 text-sm md:text-lg max-w-2xl mx-auto mb-10">
+            Wujudkan masa depan terbaik untuk putra-putri Anda bersama pendidikan berkualitas,
+            karakter kuat, dan keterampilan siap dunia kerja.
+        </p>
+
+        {{-- Buttons --}}
+        <div class="flex flex-col sm:flex-row justify-center gap-5">
+
+            {{-- Button Daftar --}}
+            <a href="#"
+               class="bg-yellow-400 text-black font-bold px-8 py-4 rounded-xl shadow-xl hover:scale-105 hover:bg-yellow-300 transition duration-300">
+                Daftar PPDB Sekarang
+            </a>
+
+            {{-- Button Info --}}
+            <a href="#"
+               class="border border-white text-white font-semibold px-8 py-4 rounded-xl hover:bg-white hover:text-blue-900 transition duration-300">
+                Lihat Informasi PPDB
+            </a>
+
+        </div>
+
+        {{-- Extra Note --}}
+        <p class="text-white/70 text-xs mt-8">
+            Pendaftaran terbuka untuk SMP & SMK • Kuota terbatas
+        </p>
+
+    </div>
+
+</section>
+
+{{-- ===============================
+    SECTION KONTAK & LOKASI
+================================= --}}
+<section class="max-w-7xl mx-auto py-20 px-4 bg-white">
+
+    <div class="grid md:grid-cols-2 gap-16 items-start">
+
+        {{-- ================= LEFT PANEL ================= --}}
+        <div class="space-y-8 fade-panel transition-all duration-700 ease-out">
+
+            <h2 class="text-3xl font-bold text-blue-900">
+                Hubungi Kami
+            </h2>
+
+            {{-- TELEPON --}}
+            <div class="flex items-start gap-4">
+                <div class="bg-blue-100 text-blue-900 p-3 rounded-xl text-xl">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div>
+                    <p class="font-semibold">Telepon</p>
+                    <a href="tel:+622182610808" class="text-gray-600 hover:text-blue-900 transition">
+                        +622182610808
+                    </a>
+                </div>
+            </div>
+
+            {{-- EMAIL --}}
+            <div class="flex items-start gap-4">
+                <div class="bg-blue-100 text-blue-900 p-3 rounded-xl text-xl">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                    <p class="font-semibold">Email</p>
+                    <a href="mailto:info@smk-smptintaemas.sch.id"
+                       class="text-gray-600 hover:text-blue-900 transition">
+                        info@smk-smptintaemas.sch.id
+                    </a>
+                </div>
+            </div>
+
+            {{-- SOCIAL MEDIA --}}
+            <div>
+                <p class="font-semibold mb-4">Media Sosial</p>
+
+                <div class="flex gap-5 text-5xl">
+				
+                    <a href="https://wa.me/6281380908008"
+                       target="_blank"
+                       class="text-green-600 hover:scale-110 transition">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+					
+                    <a href="https://www.facebook.com/YatindoOfficial"
+                       target="_blank"
+                       class="text-blue-600 hover:scale-110 transition">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+
+                    <a href="https://youtube.com/channel/UC2SN592P1k4BIsME5CdpSCg"
+                       target="_blank"
+                       class="text-red-600 hover:scale-110 transition">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+
+                    <a href="https://www.instagram.com/smk_yatindo/"
+                       target="_blank"
+                       class="text-pink-600 hover:scale-110 transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="http://tiktok.com/@smk_yatindo"
+                       target="_blank"
+                       class="text-black hover:scale-110 transition">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        {{-- ================= RIGHT PANEL ================= --}}
+        <div class="fade-panel transition-all duration-700 ease-out">
+
+            <h2 class="text-3xl font-bold text-blue-900 mb-6">
+                Lokasi Sekolah
+            </h2>
+
+            <div class="rounded-3xl overflow-hidden shadow-xl">
+
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.7393845431966!2d107.0237294!3d-6.297937900000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699198f3bc4929%3A0x8f8b6c3cc53dc7cf!2sSMP-SMK%20Tinta%20Emas%20Indonesia%20(Yatindo)!5e0!3m2!1sen!2sid!4v1770870069164!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    width="100%"
+                    height="350"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy">
+                </iframe>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{{-- ===============================
+    PREMIUM BLUE FOOTER
+================================= --}}
+<footer class="relative mt-10">
+
+    {{-- ===== WAVE TOP (BIRU) ===== --}}
+    <div class="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
+        <svg class="relative block w-full h-10"
+             xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 1200 120"
+             preserveAspectRatio="none">
+            <path d="M321.39,56.44C191.41,89.64,0,54.13,0,54.13V0H1200V27.35c-86.16,14.4-172.28,29.16-258.44,27.63C771.19,52.06,651.37,8.18,521.29,23.49,421.74,35.37,371.51,43.88,321.39,56.44Z"
+                  class="fill-blue-900"></path>
+        </svg>
+    </div>
+
+    {{-- ===== GLASS BLUE PANEL ===== --}}
+    <div class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950
+                backdrop-blur-xl text-white pt-28 pb-10 px-6">
+
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+
+            {{-- ===== KONTAK ===== --}}
+            <div>
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">
+                    Kontak Kami
+                </h3>
+
+                <p class="text-sm text-blue-100 mb-2">
+                    📍 Jl. Kp. Ciketing Asem Jaya No.01, RT.004/RW.005, Mustikajaya, Kec. Mustika Jaya, Kota Bks, Jawa Barat 17158
+                </p>
+
+                <p class="text-sm text-blue-100 mb-2">
+                    📞 02182610808
+                </p>
+
+                <p class="text-sm text-blue-100 mb-4">
+                    ✉ info@smk-smptintaemas.sch.id
+                </p>
+
+                {{-- SOCIAL MEDIA --}}
+                <div class="flex gap-4 mt-4">
+
+                    <a href="https://facebook.com" target="_blank" class="social-icon-blue">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+
+                    <a href="https://youtube.com" target="_blank" class="social-icon-blue">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+
+                    <a href="https://instagram.com" target="_blank" class="social-icon-blue">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="https://tiktok.com" target="_blank" class="social-icon-blue">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+
+                </div>
+            </div>
+
+
+            {{-- ===== MENU CEPAT ===== --}}
+            <div>
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">
+                    Menu Cepat
+                </h3>
+
+                <ul class="space-y-2 text-sm text-blue-100">
+                    <li><a href="/" class="footer-link-blue">Beranda</a></li>
+                    <li><a href="#" class="footer-link-blue">Profil</a></li>
+                    <li><a href="{{ route('posts.all') }}" class="footer-link-blue">Berita</a></li>
+                    <li><a href="#" class="footer-link-blue">Kontak</a></li>
+                </ul>
+            </div>
+
+
+            {{-- ===== GOOGLE MAPS ===== --}}
+            <div>
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">
+                    Lokasi Kami
+                </h3>
+
+                <div class="rounded-xl overflow-hidden shadow-xl border border-blue-700/30">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.7393845431966!2d107.0237294!3d-6.297937900000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699198f3bc4929%3A0x8f8b6c3cc53dc7cf!2sSMP-SMK%20Tinta%20Emas%20Indonesia%20(Yatindo)!5e0!3m2!1sen!2sid!4v1770870069164!5m2!1sen!2sid"
+                        width="100%" 
+                        height="180"
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- COPYRIGHT --}}
+        <div class="text-center text-xs text-blue-200 mt-10 border-t border-blue-700/40 pt-6">
+            © {{ date('Y') }} SMK & SMP Tinta Emas Indonesia. All Rights Reserved.
+        </div>
+
+    </div>
+
+</footer>
+
+
+{{-- LIGHTBOX MODAL --}}
+<div id="lightbox" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+    <img id="lightboxImg" class="max-h-[90%] max-w-[90%] rounded shadow-lg">
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const buttons = document.querySelectorAll('.filter-btn');
+    const items   = document.querySelectorAll('.gallery-item');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            // Reset tombol
+            buttons.forEach(b => {
+                b.classList.remove('bg-blue-600','text-white');
+                b.classList.add('bg-gray-200');
+            });
+
+            this.classList.remove('bg-gray-200');
+            this.classList.add('bg-blue-600','text-white');
+
+            const filter = this.dataset.filter.toLowerCase();
+
+            items.forEach(item => {
+
+                const category = item.dataset.category.toLowerCase();
+
+                if (filter === 'all' || category === filter) {
+
+                    item.style.display = 'block';
+
+                    // sedikit delay biar animasi masuk smooth
+                    setTimeout(() => {
+                        item.classList.remove('opacity-0','scale-95');
+                        item.classList.add('opacity-100','scale-100');
+                    }, 10);
+
+                } else {
+
+                    item.classList.remove('opacity-100','scale-100');
+                    item.classList.add('opacity-0','scale-95');
+
+                    // tunggu animasi selesai baru hide
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 200);
+                }
+
+            });
+
+        });
+    });
+
+});
+</script>
+
+<script>
+    // Ambil semua elemen slide
+    let index = 0;
+    const slides = document.querySelectorAll('.slider-item');
+
+    // Ganti slide tiap 5 detik
+    setInterval(() => {
+
+        // Sembunyikan slide aktif
+        slides[index].classList.remove('opacity-100');
+        slides[index].classList.add('opacity-0');
+
+        // Pindah ke slide berikutnya
+        index = (index + 1) % slides.length;
+
+        // Tampilkan slide baru
+        slides[index].classList.remove('opacity-0');
+        slides[index].classList.add('opacity-100');
+
+    }, 5000);
+</script>
+
+<script>
+let newsIndex = 0;
+const newsSlider = document.getElementById('newsSlider');
+const totalNews = newsSlider.children.length;
+
+function updateSlider() {
+    newsSlider.style.transform = `translateX(-${newsIndex * 100}%)`;
+}
+
+// Auto slide
+setInterval(() => {
+    newsIndex = (newsIndex + 1) % totalNews;
+    updateSlider();
+}, 5000);
+
+// Tombol next
+document.getElementById('nextNews').onclick = () => {
+    newsIndex = (newsIndex + 1) % totalNews;
+    updateSlider();
+};
+
+// Tombol prev
+document.getElementById('prevNews').onclick = () => {
+    newsIndex = (newsIndex - 1 + totalNews) % totalNews;
+    updateSlider();
+};
+</script>
+
+
+<script>
+const images = document.querySelectorAll('.gallery-img');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+images.forEach(img => {
+    img.addEventListener('click', () => {
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        lightboxImg.src = img.src;
+    });
+});
+
+// Tutup jika klik background
+lightbox.addEventListener('click', () => {
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+});
+</script>
+
+<style>
+#mainHeader {
+    backdrop-filter: blur(10px);
+}
+
+.header-solid {
+    background: rgba(15, 23, 42, 0.95);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.nav-link {
+    position: relative;
+    transition: all 0.3s;
+}
+
+.nav-link::after {
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-3px;
+    width:0;
+    height:2px;
+    background:#facc15;
+    transition:0.3s;
+}
+
+.nav-link:hover { color:#facc15; }
+.nav-link:hover::after { width:100%; }
+
+.active-nav {
+    color:#facc15 !important;
+}
+
+.dropdown {
+    position:absolute;
+    top:100%;
+    left:0;
+    background:white;
+    color:#333;
+    min-width:200px;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    opacity:0;
+    transform:translateY(10px);
+    transition:0.3s;
+    pointer-events:none;
+}
+
+.group:hover > .dropdown {
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+}
+
+.dropdown a {
+    display:block;
+    padding:10px 15px;
+}
+.dropdown a:hover { background:#f3f4f6; }
+
+.dropdown-sub {
+    position:absolute;
+    left:100%;
+    top:0;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    opacity:0;
+    transform:translateX(10px);
+    transition:0.3s;
+    pointer-events:none;
+}
+
+.group:hover > .dropdown-sub {
+    opacity:1;
+    transform:translateX(0);
+    pointer-events:auto;
+}
+h1, h2, h3 {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+p {
+    font-weight: 400;
+}
+
+.nav-link {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+.fade-panel {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-panel.animate {
+    opacity: 0;
+    transform: translateY(40px);
+}
+.social-icon-blue {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    color: #fff;
+}
+
+.social-icon-blue:hover {
+    background: #facc15;
+    color: #000;
+    transform: translateY(-4px);
+    box-shadow: 0 5px 15px rgba(250,204,21,0.4);
+}
+
+.footer-link-blue {
+    transition: all 0.3s ease;
+}
+
+.footer-link-blue:hover {
+    color: #facc15;
+    padding-left: 6px;
+}
+html {
+    scroll-behavior: smooth;
+}
+
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const header = document.getElementById("mainHeader");
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    // Scroll effect
+    window.addEventListener("scroll", function(){
+        if(window.scrollY > 50){
+            header.classList.add("header-solid");
+        } else {
+            header.classList.remove("header-solid");
+        }
+    });
+
+    // Mobile toggle
+    menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+    });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const panels = document.querySelectorAll('.fade-panel');
+
+    // kasih state awal animasi
+    panels.forEach(panel => {
+        panel.classList.add('animate');
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+                entry.target.classList.remove('animate');
+            } else {
+                entry.target.classList.add('animate');
+            }
+
+        });
+    }, {
+        threshold: 0.15
+    });
+
+    panels.forEach(panel => observer.observe(panel));
+
+});
+</script>
+
+
+{{-- ===============================
+    BACK TO TOP BUTTON
+================================= --}}
+<button id="backToTop"
+        class="fixed bottom-8 right-8 bg-yellow-400 text-black p-3 rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 hover:scale-110">
+    <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const backToTop = document.getElementById("backToTop");
+
+    // Muncul saat scroll
+    window.addEventListener("scroll", function(){
+        if(window.scrollY > 300){
+            backToTop.classList.remove("opacity-0","pointer-events-none");
+            backToTop.classList.add("opacity-100");
+        } else {
+            backToTop.classList.remove("opacity-100");
+            backToTop.classList.add("opacity-0","pointer-events-none");
+        }
+    });
+
+    // Smooth scroll
+    backToTop.addEventListener("click", function(){
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+
+});
+</script>
+
+
+</body>
+</html>

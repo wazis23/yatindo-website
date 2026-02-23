@@ -1,0 +1,6 @@
+@import url("frontend.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+

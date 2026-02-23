@@ -1,0 +1,153 @@
+<x-layouts.admin>
+
+<div class="p-6">
+
+    {{-- HEADER --}}
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Daftar Guru</h1>
+            <p class="text-sm text-gray-500">Kelola data guru SMP & SMK</p>
+        </div>
+
+        <a href="{{ route('teachers.create') }}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
+            + Tambah Guru
+        </a>
+    </div>
+
+    {{-- CARD TABLE --}}
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                    <th class="px-4 py-3 text-left">Foto</th>
+                    <th class="px-4 py-3 text-left">Nama</th>
+                    <th class="px-4 py-3 text-left">Unit</th>
+                    <th class="px-4 py-3 text-left">Jabatan</th>
+                    <th class="px-4 py-3 text-left">Jurusan</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y">
+
+                @forelse($teachers as $teacher)
+                <tr class="hover:bg-gray-50 transition">
+
+                    <td class="px-4 py-3">
+                        @if($teacher->photo)
+                            <img src="{{ asset('storage/'.$teacher->photo) }}"
+                                 class="w-12 h-12 rounded-full object-cover shadow">
+                        @else
+                            <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+                        @endif
+                    </td>
+
+                    <td class="px-4 py-3 font-medium text-gray-800">
+                        {{ $teacher->name }}
+                        <div class="text-xs text-gray-400">
+                            {{ $teacher->subject }}
+                        </div>
+                    </td>
+
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-1 text-xs rounded-full
+                            {{ $teacher->unit == 'smk' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600' }}">
+                            {{ strtoupper($teacher->unit) }}
+                        </span>
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ $teacher->position->name ?? '-' }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ $teacher->major->name ?? '-' }}
+                    </td>
+
+                    <td class="px-4 py-3 text-center space-x-2">
+
+                        <a href="{{ route('teachers.edit',$teacher) }}"
+                           class="px-3 py-1 bg-yellow-400 text-white text-xs rounded hover:bg-yellow-500">
+                            Edit
+                        </a>
+
+                        <form action="{{ route('teachers.destroy',$teacher) }}"
+                              method="POST"
+                              class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button  type="button" 
+								onclick="openDeleteModal({{ $teacher->id }}, '{{ $teacher->name }}')"
+								class="bg-red-600 text-white px-3 py-1 rounded">
+								Hapus
+							</button>
+				</form>
+
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" class="text-center py-8 text-gray-400">
+                        Belum ada data guru
+                    </td>
+                </tr>
+                @endforelse
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="mt-4">
+        {{ $teachers->links() }}
+    </div>
+
+</div>
+
+	<div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+		<div class="bg-white rounded-2xl shadow-xl w-96 p-6">
+
+			<h3 class="text-lg font-bold mb-3">Hapus Guru</h3>
+
+			<p id="deleteText" class="text-sm text-gray-600 mb-4"></p>
+
+			<form id="deleteForm" method="POST">
+				@csrf
+				@method('DELETE')
+
+				<div class="flex justify-end gap-3">
+					<button type="button" onclick="closeDeleteModal()"
+						class="px-4 py-2 border rounded">
+						Batal
+					</button>
+
+					<button type="submit"
+						class="px-4 py-2 bg-red-600 text-white rounded">
+						Hapus
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+<script>
+function openDeleteModal(id, name) {
+
+    document.getElementById('deleteText').innerText =
+        `Yakin ingin menghapus ${name}?`;
+
+    document.getElementById('deleteForm').action =
+        `/admin/teachers/${id}`;
+
+    document.getElementById('deleteModal').classList.remove('hidden');
+    document.getElementById('deleteModal').classList.add('flex');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+</script>
+</x-layouts.admin>
