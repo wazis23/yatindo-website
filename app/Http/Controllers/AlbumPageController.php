@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Album;
 
-public function show($id)
+class AlbumPageController extends Controller
 {
-    $album = Album::with('photos')->findOrFail($id);
-    return view('album.show', compact('album'));
+    public function index()
+    {
+        $albums = Album::with('photos')
+            ->latest()
+            ->get();
+
+        return view('frontend.albums.index', compact('albums'));
+    }
+
+    public function show($id)
+    {
+        $album = Album::with('photos')
+            ->findOrFail($id);
+
+        return view('frontend.albums.show', compact('album'));
+    }
 }

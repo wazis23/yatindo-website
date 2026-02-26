@@ -70,7 +70,7 @@
                 <ul class="space-y-2 text-sm text-blue-100">
                     <li><a href="/" class="footer-link-blue">Beranda</a></li>
                     <li><a href="#" class="footer-link-blue">Profil</a></li>
-                    <li><a href="{{ route('posts.all') }}" class="footer-link-blue">Berita</a></li>
+                    <li><a href="{{ route('frontend.posts.index') }}" class="footer-link-blue">Berita</a></li>
                     <li><a href="#" class="footer-link-blue">Kontak</a></li>
                 </ul>
             </div>

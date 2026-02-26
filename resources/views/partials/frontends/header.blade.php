@@ -49,7 +49,7 @@ class="fixed top-0 w-full z-50 transition-all duration-500">
                 </div>
             </div>
 
-            <a href="{{ route('posts.all') }}" class="nav-link {{ request()->is('berita*') ? 'active-nav' : '' }}">Berita</a>
+            <a href="{{ route('frontend.posts.index') }}" class="nav-link {{ request()->is('berita*') ? 'active-nav' : '' }}">Berita</a>
             <a href="#" class="nav-link">Kontak</a>
 
         </nav>
@@ -62,7 +62,7 @@ class="fixed top-0 w-full z-50 transition-all duration-500">
     <div id="mobileMenu" class="hidden md:hidden bg-blue-900 text-white px-6 pb-6 space-y-3 text-sm">
         <a href="/" class="block">Beranda</a>
         <a href="#">Profil</a>
-        <a href="{{ route('posts.all') }}">Berita</a>
+        <a href="{{ route('frontend.posts.index') }}">Berita</a>
         <a href="#">Kontak</a>
     </div>
 </header>

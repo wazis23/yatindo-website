@@ -7,7 +7,7 @@
         <p class="text-sm text-gray-500">Kelola album foto kegiatan sekolah</p>
     </div>
 
-    <a href="{{ route('albums.create') }}"
+    <a href="{{ route('admin.albums.create') }}"
        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition">
         + Album
     </a>
@@ -46,17 +46,17 @@
 
                 <td class="p-4 text-center space-x-2">
 
-                    <a href="{{ route('albums.show',$album->id) }}"
+                    <a href="{{ route('admin.albums.show',$album->id) }}"
                        class="px-3 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600 transition">
                         Lihat
                     </a>
 
-                    <a href="{{ route('albums.edit',$album->id) }}"
+                    <a href="{{ route('admin.albums.edit',$album->id) }}"
                        class="px-3 py-1 bg-yellow-500 text-white rounded-md text-xs hover:bg-yellow-600 transition">
                         Edit
                     </a>
 
-                    <form action="{{ route('albums.destroy',$album->id) }}"
+                    <form action="{{ route('admin.albums.destroy',$album->id) }}"
                           method="POST"
                           class="inline">
                         @csrf

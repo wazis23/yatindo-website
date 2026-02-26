@@ -5,7 +5,7 @@
 
     <div class="p-6">
         <form method="POST"
-              action="{{ route('sliders.store') }}"
+              action="{{ route('admin.sliders.store') }}"
               enctype="multipart/form-data">
 
             @csrf

@@ -35,7 +35,7 @@ class AlbumController extends Controller
             'category'    => $request->category
         ]);
 
-        return redirect()->route('albums.index')->with('success','Album dibuat');
+        return redirect()->route('admin.albums.index')->with('success','Album dibuat');
     }
 
     public function show(Album $album)
@@ -109,7 +109,7 @@ class AlbumController extends Controller
     public function update(Request $request, Album $album)
     {
         $album->update($request->only('title','description','category'));
-        return redirect()->route('albums.index');
+        return redirect()->route('adminalbums.index');
     }
 
     public function destroy(Album $album)

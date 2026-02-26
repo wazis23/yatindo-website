@@ -10,13 +10,40 @@ use Illuminate\Http\Request;
 
 class TeacherController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $teachers = Teacher::with(['position','major'])
-            ->latest()
-            ->paginate(10);
+        $query = Teacher::with(['position','major']);
 
-        return view('admin.teachers.index', compact('teachers'));
+    // 🔎 Search Nama
+    if ($request->search) {
+        $query->where('name', 'like', '%' . $request->search . '%');
+    }
+
+    // 🏫 Filter Unit
+    if ($request->unit) {
+        $query->where('unit', $request->unit);
+    }
+
+    // 🏷 Filter Jabatan
+    if ($request->position_id) {
+        $query->where('position_id', $request->position_id);
+    }
+
+    // 🏫 Filter Jurusan
+    if ($request->major_id) {
+        $query->where('major_id', $request->major_id);
+    }
+
+    $teachers = $query->latest()->paginate(10)->withQueryString();
+
+    $positions = Position::all();
+    $majors = Major::all();
+
+    return view('admin.teachers.index', compact(
+        'teachers',
+        'positions',
+        'majors'
+    ));
     }
 	
     public function create()

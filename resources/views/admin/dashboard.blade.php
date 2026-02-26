@@ -5,20 +5,28 @@
         </h2>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <p>Selamat datang, {{ auth()->user()->name }}</p>
-            </div>
-
-            <div class="grid grid-cols-4 gap-4 mt-6">
-                <div class="bg-blue-500 text-white p-4 rounded">Schools</div>
-                <div class="bg-green-500 text-white p-4 rounded">Teachers</div>
-                <div class="bg-yellow-500 text-white p-4 rounded">Majors</div>
-                <div class="bg-purple-500 text-white p-4 rounded">Gallery</div>
-            </div>
-
-        </div>
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-gray-500 text-sm">Total Berita</h3>
+        <p class="text-3xl font-bold text-blue-600 mt-2">
+            {{ $totalPosts }}
+        </p>
     </div>
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-gray-500 text-sm">Sudah Publish</h3>
+        <p class="text-3xl font-bold text-green-600 mt-2">
+            {{ $publishedPosts }}
+        </p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-gray-500 text-sm">Draft</h3>
+        <p class="text-3xl font-bold text-red-600 mt-2">
+            {{ $draftPosts }}
+        </p>
+    </div>
+
+</div>
 </x-layouts.admin>

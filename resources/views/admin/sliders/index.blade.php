@@ -8,7 +8,7 @@
 
     {{-- Tombol tambah --}}
     <div class="mb-4">
-        <a href="{{ route('sliders.create') }}"
+        <a href="{{ route('admin.sliders.create') }}"
            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
             + Tambah Slider
         </a>
@@ -48,7 +48,7 @@
                     {{-- Tombol hapus --}}
                     <td class="p-4">
                         <form method="POST"
-                              action="{{ route('sliders.destroy',$slider->id) }}">
+                              action="{{ route('admin.sliders.destroy',$slider->id) }}">
                             @csrf
                             @method('DELETE')
                             <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow">

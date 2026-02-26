@@ -2,7 +2,7 @@
 
 <h1 class="text-xl font-bold mb-4">Upload Foto Galeri</h1>
 
-<form method="POST" action="{{ route('galleries.store') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ route('admin.galleries.store') }}" enctype="multipart/form-data">
     @csrf
 
     <input type="text" name="title" placeholder="Judul kegiatan" class="border p-2 w-full mb-3">

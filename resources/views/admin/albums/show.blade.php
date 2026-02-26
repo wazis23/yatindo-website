@@ -19,7 +19,7 @@
         Upload Foto ke Album
     </h3>
 
-    <form action="{{ route('albums.upload', $album->id) }}"
+    <form action="{{ route('admin.albums.upload', $album->id) }}"
           method="POST"
           enctype="multipart/form-data">
         @csrf
@@ -106,7 +106,7 @@
 
 
             {{-- Tombol hapus --}}
-            <form action="{{ route('galleries.destroy', $photo->id) }}"
+            <form action="{{ route('admin.galleries.destroy', $photo->id) }}"
                   method="POST"
                   class="absolute top-2 right-2 hidden group-hover:block">
                 @csrf
@@ -117,7 +117,7 @@
             </form>
             {{-- TOMBOL COVER ALBUM --}}
 			<div class="absolute top-2 left-2">
-				<form action="{{ route('albums.setCover', $photo->id) }}" method="POST">
+				<form action="{{ route('admin.albums.setCover', $photo->id) }}" method="POST">
 					@csrf
 					<button
 						class="text-xs px-2 py-1 rounded
@@ -303,7 +303,7 @@ uploadBtn.addEventListener('click', function () {
     formData.append('_token', '{{ csrf_token() }}');
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', "{{ route('albums.upload', $album->id) }}", true);
+    xhr.open('POST', "{{ route('admin.albums.upload', $album->id) }}", true);
 
     // Tampilkan progress
     progressWrapper.classList.remove('hidden');
@@ -372,7 +372,7 @@ document.querySelectorAll('.photo-title').forEach(input => {
 
     input.addEventListener('change', function () {
 
-        fetch("{{ route('gallery.updateTitle', '') }}/" + this.dataset.id + "/update-title", {
+        fetch("{{ route('admin.galleries.updateTitle', '') }}/" + this.dataset.id + "/update-title", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": "{{ csrf_token() }}",

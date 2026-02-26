@@ -25,7 +25,7 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
 		@foreach($albums as $album)
-		<a href="{{ route('album.show',$album->id) }}"
+		<a href="{{ route('albums.show',$album->id) }}"
 			class="gallery-item block rounded-xl shadow bg-white overflow-hidden 
        transition-all duration-300 opacity-100 scale-100"
 			data-category="{{ strtolower($album->category) }}">

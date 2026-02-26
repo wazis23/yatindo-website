@@ -3,7 +3,7 @@
 
     <div class="flex justify-between items-center mb-6 fade-panel transition-all duration-700 ease-out">
         <h2 class="text-2xl font-bold">Berita Terbaru</h2>
-        <a href="{{ route('posts.all') }}" class="text-blue-600 text-sm">
+        <a href="{{ route('frontend.posts.index') }}" class="text-blue-600 text-sm">
     Lihat Semua </a>
     </div>
 
@@ -42,7 +42,7 @@
 							{{ strip_tags($post->content) }}
 						</p>
 
-						<a href="{{ route('post.show',$post->slug) }}"
+						<a href="{{ route('frontend.posts.show',$post->slug) }}"
 							class="text-blue-600 text-sm mt-3 inline-block">
 							Baca Selengkapnya
 						</a>

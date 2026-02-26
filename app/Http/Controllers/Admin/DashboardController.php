@@ -9,6 +9,10 @@ class DashboardController extends Controller
 {
      public function index()
     {
-        return view('admin.dashboard');
+        return view('admin.dashboard', [
+        'totalPosts' => \App\Models\Post::count(),
+        'publishedPosts' => \App\Models\Post::where('status','published')->count(),
+        'draftPosts' => \App\Models\Post::where('status','draft')->count(),
+    ]);
     }
 }

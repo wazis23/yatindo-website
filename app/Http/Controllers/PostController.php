@@ -5,16 +5,53 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+
+    public function index(Request $request)
     {
-        $posts = Post::latest()->get();
-        return view('posts.index', compact('posts'));
+        $query = Post::where('status','published');
+
+        // Search
+        if($request->search){
+            $query->where(function($q) use ($request){
+                $q->where('title','like','%'.$request->search.'%')
+                ->orWhere('content','like','%'.$request->search.'%');
+            });
+        }
+
+        // Filter Bulan
+        if($request->month){
+            $query->whereMonth('published_at', $request->month);
+        }
+
+        // Filter Tahun
+        if($request->year){
+            $query->whereYear('published_at', $request->year);
+        }
+
+        // Sort
+        if($request->sort == 'oldest'){
+            $query->oldest('published_at');
+        } else {
+            $query->latest('published_at');
+        }
+
+        $posts = $query->paginate(9);
+
+        // Ambil tahun unik untuk filter
+        $years = Post::whereNotNull('published_at')
+            ->selectRaw('YEAR(published_at) as year')
+            ->distinct()
+            ->pluck('year');
+
+        return view('frontend.posts.index', compact('posts','years'));
     }
 
     /**
@@ -58,10 +95,22 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
-    {
-        //
-    }
+    public function show($slug)
+{
+    $post = Post::where('slug',$slug)
+        ->where('status','published')
+        ->firstOrFail();
+
+    $post->increment('views');
+    
+    $related = Post::where('status','published')
+        ->where('id','!=',$post->id)
+        ->latest()
+        ->take(3)
+        ->get();
+
+    return view('frontend.posts.show', compact('post','related'));
+}
 
     /**
      * Show the form for editing the specified resource.

@@ -4,7 +4,7 @@
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-700">Manajemen Berita</h1>
 
-    <a href="{{ route('posts.create') }}"
+    <a href="{{ route('admin.posts.create') }}"
        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
         + Tambah Berita
     </a>
@@ -72,7 +72,7 @@
 
     {{-- Publish button --}}
     @if($post->status != 'published')
-    <form method="POST" action="{{ route('posts.publish',$post->id) }}" class="inline">
+    <form method="POST" action="{{ route('admin.posts.publish',$post->id) }}" class="inline">
         @csrf
         <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs">
             Publish
@@ -80,13 +80,13 @@
     </form>
     @endif
 
-    <a href="{{ route('posts.edit',$post->id) }}"
+    <a href="{{ route('admin.posts.edit',$post->id) }}"
        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs">
         Edit
     </a>
 
     <form method="POST"
-          action="{{ route('posts.destroy',$post->id) }}"
+          action="{{ route('admin.posts.destroy',$post->id) }}"
           class="inline">
         @csrf
         @method('DELETE')

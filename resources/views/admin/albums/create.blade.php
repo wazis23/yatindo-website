@@ -11,7 +11,7 @@
 {{-- FORM CARD --}}
 <div class="bg-white rounded-2xl shadow-lg p-8 max-w-3xl">
 
-    <form method="POST" action="{{ route('albums.store') }}">
+    <form method="POST" action="{{ route('admin.albums.store') }}">
         @csrf
 
         {{-- Judul Album --}}
@@ -55,7 +55,7 @@
         {{-- Tombol --}}
         <div class="flex justify-between items-center">
 
-            <a href="{{ route('albums.index') }}"
+            <a href="{{ route('admin.albums.index') }}"
                class="text-gray-500 hover:underline text-sm">
                 ← Kembali
             </a>

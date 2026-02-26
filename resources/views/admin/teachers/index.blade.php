@@ -9,12 +9,83 @@
             <p class="text-sm text-gray-500">Kelola data guru SMP & SMK</p>
         </div>
 
-        <a href="{{ route('teachers.create') }}"
+        <a href="{{ route('admin.teachers.create') }}"
            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
             + Tambah Guru
         </a>
     </div>
+{{-- ================= FILTER & SEARCH ================= --}}
+<div class="bg-white rounded-xl shadow-md p-4 mb-6">
 
+    <form method="GET" class="grid md:grid-cols-5 gap-4 items-end">
+
+        {{-- SEARCH --}}
+        <div>
+            <label class="text-xs text-gray-500">Cari Nama</label>
+            <input type="text"
+                   name="search"
+                   value="{{ request('search') }}"
+                   placeholder="Nama guru..."
+                   class="w-full border rounded-lg px-3 py-2 text-sm">
+        </div>
+
+        {{-- UNIT --}}
+        <div>
+            <label class="text-xs text-gray-500">Unit</label>
+            <select name="unit"
+                    class="w-full border rounded-lg px-3 py-2 text-sm">
+                <option value="">Semua</option>
+                <option value="smp" {{ request('unit')=='smp'?'selected':'' }}>SMP</option>
+                <option value="smk" {{ request('unit')=='smk'?'selected':'' }}>SMK</option>
+            </select>
+        </div>
+
+        {{-- JABATAN --}}
+        <div>
+            <label class="text-xs text-gray-500">Jabatan</label>
+            <select name="position_id"
+                    class="w-full border rounded-lg px-3 py-2 text-sm">
+                <option value="">Semua</option>
+                @foreach($positions as $pos)
+                    <option value="{{ $pos->id }}"
+                        {{ request('position_id')==$pos->id?'selected':'' }}>
+                        {{ $pos->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- JURUSAN --}}
+        <div>
+            <label class="text-xs text-gray-500">Jurusan</label>
+            <select name="major_id"
+                    class="w-full border rounded-lg px-3 py-2 text-sm">
+                <option value="">Semua</option>
+                @foreach($majors as $major)
+                    <option value="{{ $major->id }}"
+                        {{ request('major_id')==$major->id?'selected':'' }}>
+                        {{ $major->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- BUTTON --}}
+        <div class="flex gap-2">
+            <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+                Filter
+            </button>
+
+            <a href="{{ route('admin.teachers.index') }}"
+               class="bg-gray-200 px-4 py-2 rounded-lg text-sm hover:bg-gray-300">
+                Reset
+            </a>
+        </div>
+
+    </form>
+
+</div>
     {{-- ================= TABLE CARD ================= --}}
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
 
@@ -74,7 +145,7 @@
                     {{-- AKSI --}}
                     <td class="px-4 py-3 text-center space-x-2">
 
-                        <a href="{{ route('teachers.edit',$teacher) }}"
+                        <a href="{{ route('admin.teachers.edit',$teacher) }}"
                            class="px-3 py-1 bg-yellow-400 text-white text-xs rounded hover:bg-yellow-500 transition">
                             Edit
                         </a>

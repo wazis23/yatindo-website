@@ -1,84 +1,178 @@
 <?php
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\GalleryPageController;
+
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DashboardController;
-use Spatie\Permission\Middleware\RoleMiddleware;
-use App\Models\Post;
-use App\Models\Slider;
-use App\Http\Controllers\Admin\GalleryController;
-use App\Http\Controllers\Admin\AlbumController;
-use App\Http\Controllers\Admin\TeacherController;
+
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| FRONTEND CONTROLLERS
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
-Route::get('/', [HomeController::class, 'index']);
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\AlbumPageController;
+/*
+|--------------------------------------------------------------------------
+| FRONTEND ROUTES (PUBLIC)
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/berita', [PostController::class, 'allNews'])->name('posts.all');
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/galeri/{id}', [GalleryPageController::class,'show'])
-    ->name('gallery.show');
+/*
+|--------------------------------------------------------------------------
+| BERITA
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/album/{album}', [\App\Http\Controllers\HomeController::class, 'showAlbum'])
-    ->name('album.show');
-	
-Route::get('/cek-role', function(){
-    return auth()->user()->getRoleNames();
-})->middleware('auth');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware(['auth', RoleMiddleware::class.':admin'])
-    ->prefix('admin')
+Route::prefix('berita')
+    ->name('frontend.posts.')
     ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('admin.dashboard');
 
-        Route::resource('posts', App\Http\Controllers\PostController::class);
-        Route::post('posts/{post}/publish', [PostController::class, 'publish'])
-			->name('posts.publish')
-			->middleware('role:admin');
-		Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
-        Route::resource('galleries', GalleryController::class); 
-		Route::resource('albums', \App\Http\Controllers\Admin\AlbumController::class);
-        Route::post('albums/{album}/upload',[\App\Http\Controllers\Admin\AlbumController::class, 'uploadPhotos'])->name('albums.upload');
-        Route::post('/admin/albums/set-cover/{photo}', [AlbumController::class, 'setCover'])
-			->name('albums.setCover')
-			->middleware('role:admin');
-		Route::post('/gallery/{photo}/update-title', [App\Http\Controllers\Admin\GalleryController::class, 'updateTitle'])
-			->name('gallery.updateTitle');
-	    Route::resource('teachers', TeacherController::class);
-		Route::post('/admin/gallery/{photo}/update-title',
-			[App\Http\Controllers\Admin\GalleryController::class, 'updateTitle'])->name('gallery.updateTitle');
-		Route::post('/admin/teachers/check-position',
-			[TeacherController::class, 'checkPosition']
-			)->name('teachers.checkPosition');
+        Route::get('/', [PostController::class, 'index'])
+            ->name('index');
 
+        Route::get('/{slug}', [PostController::class, 'show'])
+            ->name('show');
 
 });
 
-Route::get('/berita/{slug}', function($slug){
-    $post = \App\Models\Post::where('slug',$slug)->firstOrFail();
-    return view('posts.show', compact('post'));
-})->name('post.show');
+/*
+|--------------------------------------------------------------------------
+| GURU
+|--------------------------------------------------------------------------
+*/
 
-// Halaman daftar semua berita (frontend)
+//Route::get('/guru', [TeacherController::class, 'index'])
+  //  ->name('teachers.index');
+
+/*
+|--------------------------------------------------------------------------
+| GALLERY
+|--------------------------------------------------------------------------
+*/
+
+//Route::get('/gallery', [GalleryController::class, 'index'])
+//    ->name('galleries.index');
+Route::get('/galeri', [AlbumPageController::class,'index'])
+    ->name('albums.index');
+Route::get('/galeri/{id}', [AlbumPageController::class,'show'])
+    ->name('albums.show');
+/*
+|--------------------------------------------------------------------------
+| ALBUM DETAIL
+|--------------------------------------------------------------------------
+*/
+
+
+
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES (BREEZE)
+|--------------------------------------------------------------------------
+*/
 
 require __DIR__.'/auth.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN CONTROLLERS
+|--------------------------------------------------------------------------
+*/
+
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\Admin\AlbumController as AdminAlbumController;
+use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES (PROTECTED)
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('admin')
+    ->middleware(['auth', 'role:super-admin|admin|content-maker'])
+    ->name('admin.')
+    ->group(function () {
+
+        /*
+        |--------------------------------------------------------------------------
+        | DASHBOARD
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | POSTS (BERITA)
+        |--------------------------------------------------------------------------
+        */
+
+        Route::resource('posts', AdminPostController::class);
+
+        // Publish (Approval)
+        Route::post('posts/{post}/publish',
+            [AdminPostController::class, 'publish'])
+            ->middleware('permission:publish posts')
+            ->name('posts.publish');
+        Route::post('upload-image',
+            [AdminPostController::class, 'uploadImage']
+        )->name('upload.image');
+        Route::post('posts/autosave', 
+            [AdminPostController::class, 'autosave']
+        )->name('posts.autosave');
+        /*
+        |--------------------------------------------------------------------------
+        | SLIDERS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::resource('sliders', SliderController::class);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | GALLERIES
+        |--------------------------------------------------------------------------
+        */
+
+        Route::resource('galleries', AdminGalleryController::class);
+
+        Route::post('galleries/{photo}/update-title',
+            [AdminGalleryController::class, 'updateTitle'])
+            ->name('galleries.updateTitle');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ALBUMS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::resource('albums', AdminAlbumController::class);
+
+        Route::post('albums/{photo}/set-cover',
+            [AdminAlbumController::class, 'setCover'])
+            ->name('albums.setCover');
+        Route::post('albums/{album}/upload',
+            [AdminAlbumController::class, 'upload'])
+            ->name('albums.upload');
+
+        /*
+        |--------------------------------------------------------------------------
+        | TEACHERS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::resource('teachers', AdminTeacherController::class);
+
+    });

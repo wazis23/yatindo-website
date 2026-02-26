@@ -19,7 +19,7 @@
 </div>
 
 {{-- Tombol upload --}}
-<a href="{{ route('galleries.create') }}"
+<a href="{{ route('admin.galleries.create') }}"
    class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow mb-6">
     + Upload Foto
 </a>
