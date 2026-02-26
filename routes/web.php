@@ -60,7 +60,8 @@ Route::get('/galeri', [AlbumPageController::class,'index'])
     ->name('albums.index');
 Route::get('/galeri/{id}', [AlbumPageController::class,'show'])
     ->name('albums.show');
-/*
+
+    /*
 |--------------------------------------------------------------------------
 | ALBUM DETAIL
 |--------------------------------------------------------------------------
@@ -145,12 +146,16 @@ Route::prefix('admin')
         |--------------------------------------------------------------------------
         */
 
-        Route::resource('galleries', AdminGalleryController::class);
+        
 
         Route::post('galleries/{photo}/update-title',
             [AdminGalleryController::class, 'updateTitle'])
             ->name('galleries.updateTitle');
-
+        Route::delete('galleries/bulk-delete',
+            [AdminGalleryController::class,'bulkDelete'])
+            ->name('galleries.bulkDelete');
+            
+        Route::resource('galleries', AdminGalleryController::class);
 
         /*
         |--------------------------------------------------------------------------
@@ -164,7 +169,7 @@ Route::prefix('admin')
             [AdminAlbumController::class, 'setCover'])
             ->name('albums.setCover');
         Route::post('albums/{album}/upload',
-            [AdminAlbumController::class, 'upload'])
+            [AdminAlbumController::class, 'uploadPhotos'])
             ->name('albums.upload');
 
         /*

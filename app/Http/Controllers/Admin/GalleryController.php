@@ -4,59 +4,61 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
-use Illuminate\Http\Request;
 use App\Models\Album;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
-    // Tampilkan daftar galeri
-    public function index()
+    public function index(Request $request)
     {
-        $galleries = Gallery::latest()->get();
-        return view('admin.galleries.index', compact('galleries'));
+        $albums = Album::orderBy('title')->get();
+
+        $query = Gallery::with('album')->latest();
+
+        if ($request->album_id) {
+            $query->where('album_id', $request->album_id);
+        }
+
+        $photos = $query->paginate(24);
+
+        return view('admin.galleries.index', compact('photos','albums'));
     }
 
-    public function updateTitle(Request $request, Gallery $photo)
-{
-    $photo->title = $request->title;
-    $photo->save();
 
-    return response()->json(['success' => true]);
+public function destroy(Gallery $gallery)
+{
+    // Hapus file dari storage
+    if ($gallery->image && Storage::disk('public')->exists($gallery->image)) {
+        Storage::disk('public')->delete($gallery->image);
+    }
+
+    $gallery->delete();
+
+    return back()->with('success', 'Foto berhasil dihapus');
 }
 
-    // Form upload
-    public function create()
-    {
-        $albums = Album::all(); // ambil semua album
-        return view('admin.galleries.create', compact('albums'));
+public function bulkDelete(Request $request)
+{
+    $ids = explode(',', $request->ids);
+
+    if (empty($ids)) {
+        return back()->with('error', 'Tidak ada foto dipilih');
     }
 
-    // Simpan foto
-    public function store(Request $request)
-    {
-        $request->validate([
-        'title' => 'required',
-        'image' => 'required|image',
-        'category' => 'required|in:yayasan,sekolah,smp,smk'
-    ]);
+    $photos = Gallery::whereIn('id', $ids)->get();
 
-    $path = $request->file('image')->store('gallery','public');
+    foreach ($photos as $photo) {
 
-    Gallery::create([
-        'title' => $request->title,
-        'image' => $path,
-        'category' => $request->category,
-		'album_id' => $request->album_id,
-        'uploaded_by' => auth()->id()
-    ]);
+        // Hapus file dari storage
+        if ($photo->image && Storage::disk('public')->exists($photo->image)) {
+            Storage::disk('public')->delete($photo->image);
+        }
 
-    return redirect()->route('galleries.index');
+        $photo->delete();
     }
 
-    // Hapus foto
-    public function destroy(Gallery $gallery)
-    {
-        $gallery->delete();
-        return back();
-    }
+    return back()->with('success', count($photos) . ' foto berhasil dihapus');
+}
+
 }

@@ -117,9 +117,10 @@
 
 {{-- ================= LIGHTBOX ================= --}}
 <div id="lightbox"
-     class="fixed inset-0 hidden z-[99999]
+     class="fixed inset-0 z-[999999]
             bg-black/95 backdrop-blur-md
-            flex items-center justify-center">
+            flex items-center justify-center
+            invisible opacity-0 transition duration-300">
 
     <button id="closeLightbox"
         class="absolute top-6 right-8 text-white text-4xl z-50">
@@ -167,18 +168,28 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ================= OPEN ================= */
     function openLightbox() {
         updateImage();
-        lightbox.classList.remove('hidden');
-        document.documentElement.classList.add('overflow-hidden');
-    }
 
-    /* ================= CLOSE ================= */
+        lightbox.classList.remove('invisible','opacity-0');
+        lightbox.classList.add('visible','opacity-100');
+
+        document.documentElement.style.overflow = 'hidden';
+    }
+    /* ================= close ================= */
     function closeLightbox() {
-        lightbox.classList.add('hidden');
-        document.documentElement.classList.remove('overflow-hidden');
+
+        lightbox.classList.remove('visible','opacity-100');
+        lightbox.classList.add('invisible','opacity-0');
+
+        document.documentElement.style.overflow = '';
+
         scale = 1;
         lightboxImage.style.transform = 'scale(1)';
     }
-
+    
+    closeBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        closeLightbox();
+    });
     /* ================= CLICK IMAGE ================= */
     images.forEach((img, index) => {
         img.addEventListener('click', () => {
