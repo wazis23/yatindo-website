@@ -13,6 +13,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\AlbumPageController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SettingController;
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES (PUBLIC)
@@ -98,86 +100,127 @@ use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 */
 
 Route::prefix('admin')
-    ->middleware(['auth', 'role:super-admin|admin|content-maker'])
+    ->middleware(['auth'])
     ->name('admin.')
     ->group(function () {
 
         /*
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
         | DASHBOARD
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
         */
-
         Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->middleware('permission:view dashboard')
             ->name('dashboard');
 
 
         /*
-        |--------------------------------------------------------------------------
-        | POSTS (BERITA)
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
+        | POSTS
+        |---------------------------------------------------
         */
+        Route::resource('posts', AdminPostController::class)
+            ->middleware('permission:manage posts');
 
-        Route::resource('posts', AdminPostController::class);
-
-        // Publish (Approval)
         Route::post('posts/{post}/publish',
             [AdminPostController::class, 'publish'])
             ->middleware('permission:publish posts')
             ->name('posts.publish');
+
+        Route::post('posts/{post}/unpublish',
+            [AdminPostController::class, 'unpublish'])
+            ->middleware('permission:publish posts')
+            ->name('posts.unpublish');
+
+        Route::post('posts/autosave',
+            [AdminPostController::class, 'autosave'])
+            ->middleware('permission:manage posts')
+            ->name('posts.autosave');
+
         Route::post('upload-image',
-            [AdminPostController::class, 'uploadImage']
-        )->name('upload.image');
-        Route::post('posts/autosave', 
-            [AdminPostController::class, 'autosave']
-        )->name('posts.autosave');
+            [AdminPostController::class, 'uploadImage'])
+            ->middleware('permission:manage posts')
+            ->name('upload.image');
+
+
         /*
-        |--------------------------------------------------------------------------
-        | SLIDERS
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
+        | SLIDERS (Admin & Super Admin)
+        |---------------------------------------------------
         */
-
-        Route::resource('sliders', SliderController::class);
+        Route::resource('sliders', SliderController::class)
+            ->middleware('permission:manage sliders');
 
 
         /*
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
         | GALLERIES
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
         */
-
-        
-
         Route::post('galleries/{photo}/update-title',
             [AdminGalleryController::class, 'updateTitle'])
+            ->middleware('permission:manage albums')
             ->name('galleries.updateTitle');
+
         Route::delete('galleries/bulk-delete',
             [AdminGalleryController::class,'bulkDelete'])
+            ->middleware('permission:manage albums')
             ->name('galleries.bulkDelete');
-            
-        Route::resource('galleries', AdminGalleryController::class);
+
+        Route::resource('galleries', AdminGalleryController::class)
+            ->middleware('permission:manage albums');
+
 
         /*
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
         | ALBUMS
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
         */
-
-        Route::resource('albums', AdminAlbumController::class);
+        Route::resource('albums', AdminAlbumController::class)
+            ->middleware('permission:manage albums');
 
         Route::post('albums/{photo}/set-cover',
             [AdminAlbumController::class, 'setCover'])
+            ->middleware('permission:manage albums')
             ->name('albums.setCover');
+
         Route::post('albums/{album}/upload',
             [AdminAlbumController::class, 'uploadPhotos'])
+            ->middleware('permission:manage albums')
             ->name('albums.upload');
 
+
         /*
-        |--------------------------------------------------------------------------
-        | TEACHERS
-        |--------------------------------------------------------------------------
+        |---------------------------------------------------
+        | TEACHERS (Admin & Super Admin)
+        |---------------------------------------------------
         */
+        Route::resource('teachers', AdminTeacherController::class)
+            ->middleware('permission:manage teachers');
 
-        Route::resource('teachers', AdminTeacherController::class);
 
+        /*
+        |---------------------------------------------------
+        | USERS (Super Admin only)
+        |---------------------------------------------------
+        */
+        Route::resource('users', UserController::class)
+            ->middleware('permission:manage users');
+        Route::post('users/verify-pin', [UserController::class, 'verifyPin'])
+            ->name('users.verifyPin');
+
+        /*
+        |---------------------------------------------------
+        | Settings (Super Admin only)
+        |---------------------------------------------------
+        */
+        Route::get('settings', [SettingController::class,'edit'])
+            ->middleware('permission:manage settings')
+            ->name('settings.edit');
+
+        Route::put('settings', [SettingController::class,'update'])
+            ->middleware('permission:manage settings')
+            ->name('settings.update');
     });
+
+

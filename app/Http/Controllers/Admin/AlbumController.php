@@ -12,6 +12,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\Album;
 use App\Models\Gallery;
 
+
 class AlbumController extends Controller
 {
     public function index()
@@ -103,13 +104,24 @@ class AlbumController extends Controller
 
     public function edit(Album $album)
     {
-        return view('admin.albums.edit', compact('album'));
+       return view('admin.albums.edit', compact('album'));
     }
 
     public function update(Request $request, Album $album)
     {
-        $album->update($request->only('title','description','category'));
-        return redirect()->route('adminalbums.index');
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $album->update([
+            'title' => $request->title,
+            'category' => $request->category,
+            'description' => $request->description,
+        ]);
+
+        return redirect()
+            ->route('admin.albums.index')
+            ->with('success', 'Album berhasil diperbarui');
     }
 
     public function destroy(Album $album)

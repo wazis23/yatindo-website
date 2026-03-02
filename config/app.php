@@ -30,7 +30,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-
+    'superadmin_pin' => env('SUPERADMIN_PIN'),
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

@@ -2,15 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    use HasFactory;
     protected $fillable = [
-        'site_name','logo','email','phone','address',
-        'maps_embed','facebook','instagram','youtube',
-        'tiktok','whatsapp'
+        'site_name',
+        'school_name',
+        'email',
+        'phone',
+        'address',
+        'maps_embed',
+        'facebook',
+        'instagram',
+        'youtube',
+        'tiktok',
+        'whatsapp',
+        'maintenance_mode'
     ];
 }
