@@ -23,6 +23,10 @@ use App\Http\Controllers\Admin\SettingController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('/maintenance', function () {
+            return view('maintenance');
+            })->name('maintenance');
+            
 /*
 |--------------------------------------------------------------------------
 | BERITA
@@ -221,6 +225,8 @@ Route::prefix('admin')
         Route::put('settings', [SettingController::class,'update'])
             ->middleware('permission:manage settings')
             ->name('settings.update');
+        
+        
     });
 
 

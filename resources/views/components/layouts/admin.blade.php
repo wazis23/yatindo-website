@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Admin Panel</title>
     @vite(['resources/css/app.css','resources/js/app.js'])
+    <link rel="icon"
+      type="image/png"
+      href="{{ settings('favicon') ? asset('storage/'.settings('favicon')) : asset('favicon.ico') }}">
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 
 <body class="bg-gray-100 h-screen overflow-hidden">
@@ -27,13 +31,10 @@
             <div class="flex items-center gap-3">
 
                 <!-- LOGO DYNAMIC -->
-                @if(settings('logo_admin'))
-                    <img src="{{ asset('storage/'.settings('logo_admin')) }}"
-                        class="w-10 h-10 object-contain rounded-lg shadow">
-                @else
-                    <img src="{{ asset('logo.png') }}"
-                        class="w-10 h-10 object-contain rounded-lg shadow">
-                @endif
+                <img src="{{ settings('logo_admin') 
+                    ? asset('storage/'.settings('logo_admin')) 
+                    : asset('logo.png') }}"
+                class="h-10 object-contain">
 
                 <!-- TEXT DYNAMIC -->
                 <div x-show="open" class="leading-tight">
@@ -166,24 +167,33 @@
 
         </nav>
 
-        <!-- Logout -->
+       <!-- Logout -->
         <div class="p-3 border-t border-slate-800">
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button class="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-600 transition">
+
+                <button type="submit"
+                    class="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-600 transition">
+
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="w-5 h-5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor">
+
                         <path stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
                             d="M17 16l4-4m0 0l-4-4m4 4H7"/>
+
                     </svg>
+
                     <span x-show="open">Logout</span>
+
                 </button>
             </form>
+
         </div>
 
     </aside>
@@ -208,7 +218,11 @@
 
 </main>
 @stack('scripts')
+@if(session('success'))
+<script>
+    alert("{{ session('success') }}");
+</script>
+@endif
 
-<script src="//unpkg.com/alpinejs" defer></script>
 </body>
 </html>

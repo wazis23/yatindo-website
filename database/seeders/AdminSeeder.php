@@ -13,23 +13,38 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Reset cache
+        // Reset permission cache
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         /*
-        |---------------------------------------
+        |--------------------------------------------------------------------------
         | PERMISSIONS
-        |---------------------------------------
+        |--------------------------------------------------------------------------
         */
+
         $permissions = [
+
+            // DASHBOARD
             'view dashboard',
-            'manage posts',
+
+            // POSTS
+            'create posts',
+            'edit posts',
+            'delete posts',
             'publish posts',
+            'manage posts',
+
+            // MEDIA
             'manage albums',
             'manage sliders',
+            'manage gallery',
+
+            // DATA
             'manage teachers',
+
+            // SYSTEM
             'manage users',
-            'manage settings',
+            'manage settings'
         ];
 
         foreach ($permissions as $permission) {
@@ -37,45 +52,58 @@ class AdminSeeder extends Seeder
         }
 
         /*
-        |---------------------------------------
+        |--------------------------------------------------------------------------
         | ROLES
-        |---------------------------------------
+        |--------------------------------------------------------------------------
         */
+
         $superAdmin = Role::firstOrCreate(['name' => 'super-admin']);
         $admin      = Role::firstOrCreate(['name' => 'admin']);
         $content    = Role::firstOrCreate(['name' => 'content-maker']);
 
         /*
-        |---------------------------------------
-        | ASSIGN PERMISSION
-        |---------------------------------------
+        |--------------------------------------------------------------------------
+        | ASSIGN PERMISSIONS
+        |--------------------------------------------------------------------------
         */
 
-        // SUPER ADMIN → ALL
+        // SUPER ADMIN → FULL ACCESS
         $superAdmin->syncPermissions(Permission::all());
 
         // ADMIN
         $admin->syncPermissions([
             'view dashboard',
-            'manage posts',
+            'create posts',
+            'edit posts',
+            'delete posts',
             'publish posts',
+            'manage posts',
+
             'manage albums',
             'manage sliders',
-            'manage teachers',
+            'manage gallery',
+
+            'manage teachers'
         ]);
 
         // CONTENT MAKER
         $content->syncPermissions([
             'view dashboard',
+
+            'create posts',
+            'edit posts',
+            'delete posts',
             'manage posts',
-            'manage albums',
+            
+            'manage albums'
         ]);
 
         /*
-        |---------------------------------------
+        |--------------------------------------------------------------------------
         | CREATE DEFAULT SUPER ADMIN USER
-        |---------------------------------------
+        |--------------------------------------------------------------------------
         */
+
         $superAdminUser = User::firstOrCreate(
             ['email' => 'superadmin@tintaemas.sch.id'],
             [

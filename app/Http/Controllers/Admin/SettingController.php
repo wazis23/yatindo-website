@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class SettingController extends Controller
 {
@@ -27,49 +29,72 @@ class SettingController extends Controller
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'maps_embed' => 'nullable|string',
+
             'facebook' => 'nullable|url',
             'instagram' => 'nullable|url',
             'youtube' => 'nullable|url',
             'tiktok' => 'nullable|url',
             'whatsapp' => 'nullable|string',
-            'logo_frontend' => 'nullable|image',
-            'logo_admin' => 'nullable|image',
-            'favicon' => 'nullable|image',
+
+            'logo_admin' => 'nullable|image|max:2048',
+            'favicon' => 'nullable|image|max:1024',
         ]);
 
-        // Replace Logo Frontend
-        if ($request->hasFile('logo_frontend')) {
-            if ($setting->logo_frontend) {
-                Storage::disk('public')->delete($setting->logo_frontend);
-            }
+        $manager = new ImageManager(new Driver());
 
-            $setting->logo_frontend =
-                $request->file('logo_frontend')->store('logos','public');
-        }
+        /*
+        |--------------------------------
+        | LOGO ADMIN
+        |--------------------------------
+        */
 
-        // Replace Logo Admin
         if ($request->hasFile('logo_admin')) {
+
             if ($setting->logo_admin) {
                 Storage::disk('public')->delete($setting->logo_admin);
             }
 
-            $setting->logo_admin =
-                $request->file('logo_admin')->store('logos','public');
+            $image = $request->file('logo_admin');
+
+            $img = $manager->read($image)
+                ->resize(300, null)
+                ->toWebp(80);
+
+            $filename = 'logo_admin_' . time() . '.webp';
+
+            Storage::disk('public')
+                ->put('logos/' . $filename, $img);
+
+            $setting->logo_admin = 'logos/' . $filename;
         }
 
-        // Replace Favicon
+        /*
+        |--------------------------------
+        | FAVICON
+        |--------------------------------
+        */
+
         if ($request->hasFile('favicon')) {
+
             if ($setting->favicon) {
                 Storage::disk('public')->delete($setting->favicon);
             }
 
-            $setting->favicon =
-                $request->file('favicon')->store('logos','public');
+            $image = $request->file('favicon');
+
+            $img = $manager->read($image)
+                ->cover(64, 64)
+                ->toPng();
+
+            $filename = 'favicon.png';
+
+            Storage::disk('public')
+                ->put('logos/' . $filename, $img);
+
+            $setting->favicon = 'logos/' . $filename;
         }
 
-        // Fill text
         $setting->fill($request->except([
-            'logo_frontend',
             'logo_admin',
             'favicon'
         ]));

@@ -1,118 +1,296 @@
 <x-layouts.admin>
 
-<h1 class="text-2xl font-bold mb-6">Pengaturan Website</h1>
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold text-gray-800">
+            Pengaturan Website
+        </h2>
+    </x-slot>
 
-@if(session('success'))
-<div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-    {{ session('success') }}
-</div>
-@endif
+    <form method="POST"
+          action="{{ route('admin.settings.update') }}"
+          enctype="multipart/form-data">
 
-<form method="POST"
-      action="{{ route('admin.settings.update') }}"
-      enctype="multipart/form-data"
-      class="bg-white p-6 rounded shadow max-w-4xl">
+        @csrf
+        @method('PUT')
 
-@csrf
-@method('PUT')
+        <div class="max-w-5xl space-y-6">
 
-<h2 class="font-semibold mb-4">Informasi Dasar</h2>
+            <!-- INFORMASI WEBSITE -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
 
-<input type="text" name="site_name"
-value="{{ old('site_name',$setting->site_name) }}"
-placeholder="Site Name"
-class="w-full border p-2 rounded mb-3">
+                <h3 class="font-semibold text-gray-700 mb-4">
+                    Informasi Website
+                </h3>
 
-<input type="text" name="school_name"
-value="{{ old('school_name',$setting->school_name) }}"
-placeholder="Nama Sekolah"
-class="w-full border p-2 rounded mb-3">
+                <div class="grid grid-cols-2 gap-4">
 
-<hr class="my-6">
+                    <div>
+                        <label class="text-sm text-gray-500">
+                            Nama Portal
+                        </label>
 
-<h2 class="font-semibold mb-4">Logo</h2>
+                        <input type="text"
+                               name="site_name"
+                               value="{{ settings('site_name') }}"
+                               class="mt-1 w-full border rounded-lg p-2">
+                    </div>
 
-@if($setting->logo_frontend)
-<img src="{{ asset('storage/'.$setting->logo_frontend) }}"
-class="h-16 mb-2">
-@endif
-<input type="file" name="logo_frontend" class="mb-4">
+                    <div>
+                        <label class="text-sm text-gray-500">
+                            Nama Yayasan / Sekolah
+                        </label>
 
-@if($setting->logo_admin)
-<img src="{{ asset('storage/'.$setting->logo_admin) }}"
-class="h-16 mb-2">
-@endif
-<input type="file" name="logo_admin" class="mb-4">
+                        <input type="text"
+                               name="school_name"
+                               value="{{ settings('school_name') }}"
+                               class="mt-1 w-full border rounded-lg p-2">
+                    </div>
 
-@if($setting->favicon)
-<img src="{{ asset('storage/'.$setting->favicon) }}"
-class="h-10 mb-2">
-@endif
-<input type="file" name="favicon" class="mb-4">
+                </div>
 
-<hr class="my-6">
+            </div>
 
-<h2 class="font-semibold mb-4">Kontak</h2>
 
-<input type="email" name="email"
-value="{{ old('email',$setting->email) }}"
-placeholder="Email"
-class="w-full border p-2 rounded mb-3">
+            <!-- LOGO ADMIN & FAVICON -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
 
-<input type="text" name="phone"
-value="{{ old('phone',$setting->phone) }}"
-placeholder="Phone"
-class="w-full border p-2 rounded mb-3">
+                <h3 class="font-semibold text-gray-700 mb-6">
+                    Logo Website
+                </h3>
 
-<textarea name="address"
-class="w-full border p-2 rounded mb-3"
-rows="3">{{ old('address',$setting->address) }}</textarea>
+                <div class="grid grid-cols-2 gap-8">
 
-<textarea name="maps_embed"
-class="w-full border p-2 rounded mb-3"
-rows="3">{{ old('maps_embed',$setting->maps_embed) }}</textarea>
+                    <!-- LOGO ADMIN -->
+                    <div>
 
-<hr class="my-6">
+                        <label class="text-sm text-gray-500 block mb-2">
+                            Logo Admin Panel
+                        </label>
 
-<h2 class="font-semibold mb-4">Social Media</h2>
+                        <div class="flex items-center gap-4">
 
-<input type="url" name="facebook"
-value="{{ old('facebook',$setting->facebook) }}"
-placeholder="Facebook URL"
-class="w-full border p-2 rounded mb-3">
+                            <div class="relative">
 
-<input type="url" name="instagram"
-value="{{ old('instagram',$setting->instagram) }}"
-placeholder="Instagram URL"
-class="w-full border p-2 rounded mb-3">
+                                <img id="iconPreview"
+                                     src="{{ settings('logo_admin') ? asset('storage/'.settings('logo_admin')) : asset('logo.png') }}"
+                                     class="h-16 object-contain border rounded-lg bg-gray-50 p-2">
 
-<input type="url" name="youtube"
-value="{{ old('youtube',$setting->youtube) }}"
-placeholder="YouTube URL"
-class="w-full border p-2 rounded mb-3">
+                                <button type="button"
+                                        onclick="removeIcon()"
+                                        class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs">
+                                    ✕
+                                </button>
 
-<input type="url" name="tiktok"
-value="{{ old('tiktok',$setting->tiktok) }}"
-placeholder="TikTok URL"
-class="w-full border p-2 rounded mb-3">
+                            </div>
 
-<input type="text" name="whatsapp"
-value="{{ old('whatsapp',$setting->whatsapp) }}"
-placeholder="WhatsApp Number"
-class="w-full border p-2 rounded mb-3">
+                            <input type="file"
+                                   name="logo_admin"
+                                   id="iconInput"
+                                   class="text-sm">
 
-<hr class="my-6">
+                        </div>
 
-<div class="flex items-center mb-4">
-<input type="checkbox" name="maintenance_mode"
-{{ $setting->maintenance_mode ? 'checked' : '' }}>
-<span class="ml-2">Aktifkan Maintenance Mode</span>
-</div>
+                    </div>
 
-<button class="bg-blue-600 text-white px-6 py-2 rounded">
-Simpan Pengaturan
-</button>
 
-</form>
+                    <!-- FAVICON -->
+                    <div>
+
+                        <label class="text-sm text-gray-500 block mb-2">
+                            Favicon
+                        </label>
+
+                        <div class="flex items-center gap-4">
+
+                            <div class="relative">
+
+                                <img id="faviconPreview"
+                                     src="{{ settings('favicon') ? asset('storage/'.settings('favicon')) : asset('favicon.ico') }}"
+                                     class="w-16 h-16 object-contain border rounded-lg bg-gray-50 p-2">
+
+                                <button type="button"
+                                        onclick="removeFavicon()"
+                                        class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs">
+                                    ✕
+                                </button>
+
+                            </div>
+
+                            <input type="file"
+                                   name="favicon"
+                                   id="faviconInput"
+                                   class="text-sm">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- KONTAK -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+
+                <h3 class="font-semibold text-gray-700 mb-4">
+                    Kontak
+                </h3>
+
+                <div class="space-y-4">
+
+                    <input type="email"
+                           name="email"
+                           value="{{ settings('email') }}"
+                           placeholder="Email"
+                           class="w-full border rounded-lg p-2">
+
+                    <input type="text"
+                           name="phone"
+                           value="{{ settings('phone') }}"
+                           placeholder="Nomor Telepon"
+                           class="w-full border rounded-lg p-2">
+
+                    <textarea name="address"
+                              placeholder="Alamat"
+                              class="w-full border rounded-lg p-2">{{ settings('address') }}</textarea>
+
+                    <textarea name="maps_embed"
+                              placeholder="Embed Google Maps"
+                              class="w-full border rounded-lg p-2">{{ settings('maps_embed') }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- SOCIAL MEDIA -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+
+                <h3 class="font-semibold text-gray-700 mb-4">
+                    Social Media
+                </h3>
+
+                <div class="grid grid-cols-2 gap-4">
+
+                    <input type="text"
+                           name="facebook"
+                           value="{{ settings('facebook') }}"
+                           placeholder="Facebook URL"
+                           class="border rounded-lg p-2">
+
+                    <input type="text"
+                           name="instagram"
+                           value="{{ settings('instagram') }}"
+                           placeholder="Instagram URL"
+                           class="border rounded-lg p-2">
+
+                    <input type="text"
+                           name="youtube"
+                           value="{{ settings('youtube') }}"
+                           placeholder="YouTube URL"
+                           class="border rounded-lg p-2">
+
+                    <input type="text"
+                           name="tiktok"
+                           value="{{ settings('tiktok') }}"
+                           placeholder="TikTok URL"
+                           class="border rounded-lg p-2">
+
+                    <input type="text"
+                           name="whatsapp"
+                           value="{{ settings('whatsapp') }}"
+                           placeholder="WhatsApp Number"
+                           class="border rounded-lg p-2">
+
+                </div>
+
+            </div>
+
+
+            <!-- MAINTENANCE -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+
+                <label class="flex items-center gap-3">
+
+                    <input type="checkbox"
+                           name="maintenance_mode"
+                           value="1"
+                           {{ settings('maintenance_mode') ? 'checked' : '' }}>
+
+                    Aktifkan Maintenance Mode
+
+                </label>
+
+            </div>
+
+
+            <!-- BUTTON SAVE -->
+            <div>
+
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow">
+                    Simpan Pengaturan
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+
+@push('scripts')
+
+<script>
+
+const iconInput = document.getElementById('iconInput');
+const iconPreview = document.getElementById('iconPreview');
+
+const faviconInput = document.getElementById('faviconInput');
+const faviconPreview = document.getElementById('faviconPreview');
+
+
+iconInput.addEventListener('change', function(){
+
+    const file = this.files[0];
+
+    if(file){
+        iconPreview.src = URL.createObjectURL(file);
+    }
+
+});
+
+
+faviconInput.addEventListener('change', function(){
+
+    const file = this.files[0];
+
+    if(file){
+        faviconPreview.src = URL.createObjectURL(file);
+    }
+
+});
+
+
+function removeIcon(){
+
+    iconPreview.src = "{{ asset('logo.png') }}";
+    iconInput.value = "";
+
+}
+
+
+function removeFavicon(){
+
+    faviconPreview.src = "{{ asset('favicon.ico') }}";
+    faviconInput.value = "";
+
+}
+
+</script>
+
+@endpush
+
 
 </x-layouts.admin>

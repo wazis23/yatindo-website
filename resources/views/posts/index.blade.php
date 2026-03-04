@@ -101,17 +101,28 @@
 
     {{-- Delete --}}
     @can('delete posts')
-    <form method="POST"
-          action="{{ route('admin.posts.destroy',$post->id) }}"
-          class="inline">
-        @csrf
-        @method('DELETE')
-        <button onclick="return confirm('Yakin hapus berita ini?')"
-                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">
-            Hapus
-        </button>
-    </form>
-    @endcan
+
+        @if(auth()->user()->hasRole('content-maker') && $post->status === 'published')
+
+        {{-- Content maker tidak bisa hapus jika published --}}
+
+        @else
+
+        <form method="POST"
+            action="{{ route('admin.posts.destroy',$post->id) }}"
+            class="inline">
+            @csrf
+            @method('DELETE')
+
+            <button onclick="return confirm('Yakin hapus berita ini?')"
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">
+                Hapus
+            </button>
+        </form>
+
+        @endif
+
+        @endcan
 
 </td>
 {{-- STATUS --}}

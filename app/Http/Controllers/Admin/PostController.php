@@ -142,8 +142,15 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if ($post->featured_image) {
-            Storage::disk('public')->delete($post->featured_image);
+        // Jika status sudah published
+        if ($post->status === 'published') {
+
+            // Content Maker tidak boleh hapus
+            if (auth()->user()->hasRole('content-maker')) {
+                return back()->withErrors([
+                    'error' => 'Berita yang sudah dipublish tidak dapat dihapus'
+                ]);
+            }
         }
 
         $post->delete();
