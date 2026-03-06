@@ -68,11 +68,21 @@ Route::get('/galeri/{id}', [AlbumPageController::class,'show'])
     ->name('albums.show');
 
     /*
+/*
 |--------------------------------------------------------------------------
-| ALBUM DETAIL
+| PROFIL
 |--------------------------------------------------------------------------
 */
 
+
+    Route::prefix('profil')
+        ->name('profile.')
+        ->group(function () {
+
+            Route::get('/smp', [HomeController::class, 'smp'])
+                ->name('smp');
+
+    });
 
 
 /*
@@ -199,6 +209,10 @@ Route::prefix('admin')
         | TEACHERS (Admin & Super Admin)
         |---------------------------------------------------
         */
+        Route::post(
+            'teachers/check-position',
+            [AdminTeacherController::class, 'checkPosition']
+        )->name('teachers.checkPosition');
         Route::resource('teachers', AdminTeacherController::class)
             ->middleware('permission:manage teachers');
 

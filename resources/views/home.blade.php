@@ -1,4 +1,4 @@
-<x-layouts.frontend title="Beranda">
+<x-layouts.frontend title="Yayasan Tinta Emas Indonesia - Beranda">
 
     @include('partials.sections.hero')
     @include('partials.sections.berita')

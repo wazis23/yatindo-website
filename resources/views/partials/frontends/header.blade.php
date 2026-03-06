@@ -27,7 +27,7 @@ class="fixed top-0 w-full z-50 transition-all duration-500">
 
                 <div class="dropdown">
                     <a href="#">Yayasan</a>
-                    <a href="#">SMP</a>
+                    <a href="{{ route('profile.smp') }}">SMP</a>
 
                     {{-- SMK + SUB --}}
                     <div class="relative group">

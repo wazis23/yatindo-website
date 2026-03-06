@@ -126,7 +126,7 @@ class TeacherController extends Controller
 		Teacher::create($data);
 
 		return redirect()
-			->route('teachers.index')
+			->route('admin.teachers.index')
 			->with('success','Guru berhasil ditambahkan');
 	}
     public function edit(Teacher $teacher)

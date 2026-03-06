@@ -198,3 +198,309 @@ lightbox.addEventListener('click', () => {
     lightbox.classList.remove('flex');
 });
 </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const panels = document.querySelectorAll('.fade-panel');
+
+    // set state awal animasi
+    panels.forEach(panel => {
+        panel.classList.add('animate');
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                entry.target.classList.remove('animate');
+
+            } else {
+
+                entry.target.classList.add('animate');
+
+            }
+
+        });
+
+    }, {
+        threshold: 0.15
+    });
+
+    panels.forEach(panel => observer.observe(panel));
+
+});
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const slider = document.getElementById("guruSlider");
+    const nextBtn = document.getElementById("guruNext");
+    const prevBtn = document.getElementById("guruPrev");
+    const dotsContainer = document.getElementById("guruDots");
+
+    if(!slider) return;
+
+    const cards = slider.children;
+    const cardWidth = 240;
+    let index = 0;
+    let autoSlide;
+
+    // =========================
+    // DOTS
+    // =========================
+
+    const totalDots = cards.length;
+
+    for(let i=0;i<totalDots;i++){
+
+        const dot = document.createElement("div");
+        dot.className = "w-3 h-3 bg-gray-300 rounded-full cursor-pointer";
+
+        dot.addEventListener("click",()=>{
+            index = i;
+            updateSlider();
+            resetAuto();
+        });
+
+        dotsContainer.appendChild(dot);
+
+    }
+
+    function updateDots(){
+
+        [...dotsContainer.children].forEach((dot,i)=>{
+
+            dot.classList.remove("bg-yellow-400");
+            dot.classList.add("bg-gray-300");
+
+            if(i === index){
+                dot.classList.remove("bg-gray-300");
+                dot.classList.add("bg-yellow-400");
+            }
+
+        });
+
+    }
+
+    // =========================
+    // UPDATE SLIDER
+    // =========================
+
+    function updateSlider(){
+
+        slider.style.transform =
+        `translateX(-${index * cardWidth}px)`;
+
+        updateDots();
+
+    }
+
+    // =========================
+    // BUTTON CONTROL
+    // =========================
+
+    nextBtn.addEventListener("click",()=>{
+
+        index++;
+
+        if(index >= cards.length){
+            index = 0;
+        }
+
+        updateSlider();
+        resetAuto();
+
+    });
+
+    prevBtn.addEventListener("click",()=>{
+
+        index--;
+
+        if(index < 0){
+            index = cards.length - 1;
+        }
+
+        updateSlider();
+        resetAuto();
+
+    });
+
+    // =========================
+    // DRAG DESKTOP
+    // =========================
+
+    let isDragging = false;
+    let startX;
+
+    slider.addEventListener("mousedown",(e)=>{
+        isDragging = true;
+        startX = e.pageX;
+    });
+
+    slider.addEventListener("mouseup",()=>{
+        isDragging = false;
+    });
+
+    slider.addEventListener("mouseleave",()=>{
+        isDragging = false;
+    });
+
+    slider.addEventListener("mousemove",(e)=>{
+
+        if(!isDragging) return;
+
+        const move = e.pageX - startX;
+
+        if(move > 60){
+            prevBtn.click();
+            isDragging = false;
+        }
+
+        if(move < -60){
+            nextBtn.click();
+            isDragging = false;
+        }
+
+    });
+
+    // =========================
+    // TOUCH MOBILE
+    // =========================
+
+    let touchStart = 0;
+
+    slider.addEventListener("touchstart",(e)=>{
+        touchStart = e.touches[0].clientX;
+    });
+
+    slider.addEventListener("touchmove",(e)=>{
+
+        const touchMove = e.touches[0].clientX - touchStart;
+
+        if(touchMove > 60){
+            prevBtn.click();
+            touchStart = e.touches[0].clientX;
+        }
+
+        if(touchMove < -60){
+            nextBtn.click();
+            touchStart = e.touches[0].clientX;
+        }
+
+    });
+
+    // =========================
+    // AUTO SLIDE
+    // =========================
+
+    function startAuto(){
+
+        autoSlide = setInterval(()=>{
+
+            index++;
+
+            if(index >= cards.length){
+                index = 0;
+            }
+
+            updateSlider();
+
+        },4000);
+
+    }
+
+    function resetAuto(){
+
+        clearInterval(autoSlide);
+        startAuto();
+
+    }
+
+    slider.addEventListener("mouseenter",()=>{
+        clearInterval(autoSlide);
+    });
+
+    slider.addEventListener("mouseleave",()=>{
+        startAuto();
+    });
+
+    updateSlider();
+    startAuto();
+
+});
+
+</script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const grid = document.querySelector(".fasilitas-grid");
+
+    if(!grid) return;
+
+    const observer = new IntersectionObserver((entries)=>{
+
+        entries.forEach(entry=>{
+
+            if(entry.isIntersecting){
+
+                grid.classList.add("show");
+
+            } else {
+
+                grid.classList.remove("show");
+
+            }
+
+        });
+
+    }, {
+        threshold: 0.25
+    });
+
+    observer.observe(grid);
+
+});
+
+</script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const grid = document.querySelector(".ekskul-grid");
+
+    if(!grid) return;
+
+    const observer = new IntersectionObserver((entries)=>{
+
+        entries.forEach(entry=>{
+
+            if(entry.isIntersecting){
+
+                grid.classList.add("show");
+
+            } else {
+
+                grid.classList.remove("show");
+
+            }
+
+        });
+
+    },{threshold:0.25});
+
+    observer.observe(grid);
+
+});
+
+</script>

@@ -8,7 +8,7 @@
             Tambah Guru
         </h1>
 
-        <form id="teacherForm" action="{{ route('teachers.store') }}"
+        <form id="teacherForm" action="{{ route('admin.teachers.store') }}"
               method="POST"
               enctype="multipart/form-data"
               class="space-y-6">
@@ -116,7 +116,7 @@
 
         {{-- BUTTON --}}
         <div class="flex justify-end gap-3 pt-6 border-t">
-            <a href="{{ route('teachers.index') }}"
+            <a href="{{ route('admin.teachers.index') }}"
                class="px-4 py-2 border rounded-lg hover:bg-gray-100">
                 Batal
             </a>
@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
         e.preventDefault();
 
-        fetch("{{ route('teachers.checkPosition') }}", {
+        fetch("{{ route('admin.teachers.checkPosition') }}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
