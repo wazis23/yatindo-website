@@ -5,74 +5,123 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slider;
+use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of sliders.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sliders = Slider::orderBy('order_no')->get();
-        return view('admin.sliders.index', compact('sliders'));
+        $type = $request->type ?? 'home_hero';
+
+        $types = [
+            'home_hero',
+            'smp_hero',
+            'smk_hero',
+            'akl_hero',
+            'tjkt_hero',
+            'te_hero',
+            'tkr_hero',
+            'tbsm_hero',
+            'tab_hero'
+        ];
+
+        $sliders = Slider::where('type', $type)
+            ->orderBy('order_no')
+            ->get();
+
+        return view(
+            'admin.sliders.index',
+            compact('sliders', 'type', 'types')
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-         return view('admin.sliders.create');
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * Show create form.
+     */
+    public function create(Request $request)
+    {
+        $type = $request->type ?? 'home_hero';
+
+        return view(
+            'admin.sliders.create',
+            compact('type')
+        );
+    }
+
+
+    /**
+     * Store new slider(s).
      */
     public function store(Request $request)
     {
-        // Upload gambar ke storage/public/sliders
-        $path = $request->file('image')->store('sliders','public');
-
-        Slider::create([
-            'title'=>$request->title,
-            'image'=>$path,
-            'type'=>'home_hero',
-            'order_no'=>$request->order_no
+        $request->validate([
+            'images.*' => 'required|image'
         ]);
 
-        return redirect()->route('sliders.index');
+        $type = $request->type;
+
+        $lastOrder = Slider::where('type', $type)
+            ->max('order_no') ?? 0;
+
+        foreach ($request->file('images') as $image) {
+
+            $path = $image->store('sliders', 'public');
+
+            Slider::create([
+                'title'    => $request->title ?? null,
+                'image'    => $path,
+                'type'     => $type,
+                'order_no' => ++$lastOrder
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.sliders.index', ['type' => $type])
+            ->with('success', 'Slider berhasil ditambahkan');
     }
 
+
     /**
-     * Display the specified resource.
+     * Update order slider.
      */
-    public function show(string $id)
+   public function updateOrder(Request $request)
     {
-        //
+        foreach ($request->orders as $id => $order) {
+
+            \App\Models\Slider::where('id', $id)
+                ->update([
+                    'order_no' => $order
+                ]);
+
+        }
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
+
     /**
-     * Show the form for editing the specified resource.
+     * Delete slider.
      */
-    public function edit(string $id)
+    public function destroy(Slider $slider)
     {
-        //
-    }
+        if ($slider->image) {
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            Storage::disk('public')
+                ->delete($slider->image);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    // Hapus slider
-    public function destroy(Slider $slider){
         $slider->delete();
-        return back();
+
+        return back()->with(
+            'success',
+            'Slider berhasil dihapus'
+        );
     }
+    
 }

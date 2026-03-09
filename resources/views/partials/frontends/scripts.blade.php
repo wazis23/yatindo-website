@@ -504,3 +504,62 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const buttons = document.querySelectorAll(".guru-filter");
+    const cards = document.querySelectorAll(".guru-card");
+
+    buttons.forEach(btn => {
+
+        btn.addEventListener("click", function(){
+
+            const filter = this.dataset.filter;
+
+            buttons.forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+
+            cards.forEach(card => {
+
+                const category = card.dataset.category;
+
+                if(filter === "all" || category === filter){
+
+                    card.style.display = "block";
+
+                } else {
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    });
+
+});
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const slides = document.querySelectorAll(".hero-slide");
+    let index = 0;
+
+    setInterval(() => {
+
+        slides[index].classList.remove("active");
+
+        index = (index + 1) % slides.length;
+
+        slides[index].classList.add("active");
+
+    }, 6000);
+
+});
+
+</script>

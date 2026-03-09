@@ -31,7 +31,7 @@ class="fixed top-0 w-full z-50 transition-all duration-500">
 
                     {{-- SMK + SUB --}}
                     <div class="relative group">
-                        <a href="#" class="flex justify-between items-center">
+                        <a href="{{ route('profile.smk') }}" class="flex justify-between items-center">
                             SMK ▸
                         </a>
 

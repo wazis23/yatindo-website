@@ -36,6 +36,9 @@
 @include('frontend.profile.smp.sections.brosur')
 @endif
 
+@if(config('frontend.profile.smp.sections.kontak'))
+@include('frontend.profile.smp.sections.kontak')
+@endif
 
 
 

@@ -71,4 +71,29 @@ class HomeController extends Controller
             'teachers'
         ));
     }
+
+    public function smk()
+    {
+        $principal = Teacher::with('position')
+            ->where('unit', 'smk')
+            ->whereHas('position', function ($query) {
+                $query->where('name', 'Kepala Sekolah SMK');
+            })
+            ->where('is_active', 1)
+            ->first();
+
+        $teachers = Teacher::with([
+                'position',
+                'major'
+            ])
+            ->where('unit', 'smk')
+            ->where('is_active', 1)
+            ->orderBy('name')
+            ->get();
+
+        return view('frontend.profile.smk.index', compact(
+            'principal',
+            'teachers'
+        ));
+    }
 }

@@ -2,16 +2,9 @@
 
     {{-- Background --}}
     <div class="absolute inset-0">
-
-        <img src="{{ asset('images/smp/hero/hero1.jpg') }}"
-        class="hero-slide active absolute inset-0 w-full h-full object-cover">
-
-        <img src="{{ asset('images/smp/hero/hero2.jpg') }}"
-        class="hero-slide absolute inset-0 w-full h-full object-cover">
-
-        <img src="{{ asset('images/smp/hero/hero3.jpg') }}"
-        class="hero-slide absolute inset-0 w-full h-full object-cover">
-
+        <img 
+        src="{{ asset('images/hero-school.jpg') }}"
+        class="w-full h-full object-cover">
     </div>
 
     {{-- Overlay --}}
@@ -21,7 +14,7 @@
     <div class="relative z-10 text-center px-6 max-w-4xl">
 
         <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            Profil <span class="text-yellow-400">SMP Tinta Emas Indonesia</span>
+            Profil <span class="text-yellow-400">SMK Tinta Emas Indonesia</span>
         </h1>
 
         <p class="text-lg md:text-xl text-gray-200 mb-8">

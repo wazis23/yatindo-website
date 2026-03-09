@@ -81,6 +81,8 @@ Route::get('/galeri/{id}', [AlbumPageController::class,'show'])
 
             Route::get('/smp', [HomeController::class, 'smp'])
                 ->name('smp');
+            Route::get('/smk', [HomeController::class, 'smk'])
+                ->name('smk');
 
     });
 
@@ -164,7 +166,10 @@ Route::prefix('admin')
         */
         Route::resource('sliders', SliderController::class)
             ->middleware('permission:manage sliders');
-
+        Route::post(
+                'sliders/update-order',
+                [SliderController::class, 'updateOrder']
+            )->name('sliders.updateOrder');
 
         /*
         |---------------------------------------------------

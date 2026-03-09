@@ -12,18 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sliders', function (Blueprint $table) {
-        $table->id();
-        $table->string('title')->nullable();
-        $table->string('image');
-        $table->enum('type', [
-            'home_hero',
-            'home_facility',
-            'smp_visimisi',
-            'smk_visimisi'
-        ]);
-        $table->integer('order_no')->default(0);
-        $table->timestamps();
-    });
+
+            $table->id();
+
+            $table->string('title')->nullable();
+
+            $table->string('image');
+
+            // home_hero, smp_hero, smk_hero, akl_hero, dll
+            $table->string('type');
+
+            $table->integer('order_no')->default(1);
+
+            $table->timestamps();
+
+        });
     }
 
     /**

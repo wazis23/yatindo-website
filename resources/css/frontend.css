@@ -2,6 +2,14 @@ body{
     font-family: 'Inter', sans-serif;
 }
 
+html{
+    scroll-behavior: smooth;
+}
+
+section{
+    scroll-margin-top: 100px;
+}
+
 #mainHeader {
     backdrop-filter: blur(10px);
 }
@@ -535,4 +543,41 @@ body{
 .video-wrapper iframe{
     width:100%;
     height:420px;
+}
+
+.guru-filter{
+    padding:8px 18px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    font-weight:500;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.guru-filter.active{
+    background:#1d4ed8;
+    color:white;
+    border-color:#1d4ed8;
+}
+
+.guru-filter:hover{
+    background:#2563eb;
+    color:white;
+}
+
+.hero-slide{
+    transition:
+        opacity 1.5s ease,
+        filter 1.5s ease,
+        transform 6s ease;
+
+    filter: blur(10px);
+    opacity: 0;
+    transform: scale(1.05);
+}
+
+.hero-slide.active{
+    opacity: 1;
+    filter: blur(0px);
+    transform: scale(1);
 }

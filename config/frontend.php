@@ -17,10 +17,28 @@ return [
                 'ekstrakurikuler' => true,
                 'brosur' => true,
                 'video' => true,
+                'kontak' => true,
+            ]
+
+        ],
+        
+        'smk' => [
+
+            'sections' => [
+
+                'hero' => true,
+                'sambutan' => true,
+                'visi_misi' => true,
+                'keunggulan' => true,
+                'fasilitas' => true,
+                'guru' => true,
+                'ekstrakurikuler' => true,
+                'brosur' => true,
+                'video' => true,
+                'kontak' => true,
             ]
 
         ]
 
     ]
-
 ];
