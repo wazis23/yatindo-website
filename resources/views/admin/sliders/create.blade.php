@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let files = [];
 
 
+
     /* ===============================
        Click Upload
     =============================== */
@@ -124,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
+
     /* ===============================
        Input Upload
     =============================== */
@@ -131,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     input.addEventListener('change', function (e) {
         handleFiles(e.target.files);
     });
+
 
 
     /* ===============================
@@ -146,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
+
     /* ===============================
        Drag Leave
     =============================== */
@@ -155,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dropZone.classList.remove('bg-gray-100');
 
     });
+
 
 
     /* ===============================
@@ -191,9 +196,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 previewImage(compressedFile);
 
+                updateInputFiles();
+
             });
 
         });
+
+    }
+
+
+
+    /* ===============================
+       Update input file
+    =============================== */
+
+    function updateInputFiles(){
+
+        const dt = new DataTransfer();
+
+        files.forEach(file => {
+
+            dt.items.add(file);
+
+        });
+
+        input.files = dt.files;
 
     }
 
@@ -264,7 +291,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         reader.onload = function (e) {
 
+            const index = files.length - 1;
+
             const wrapper = document.createElement('div');
+
+            wrapper.dataset.index = index;
 
             wrapper.className =
                 "relative border rounded overflow-hidden group";
@@ -300,7 +331,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 .querySelector('.remove-btn')
                 .addEventListener('click', function () {
 
+                    const index = [...preview.children].indexOf(wrapper);
+
+                    files.splice(index,1);
+
                     wrapper.remove();
+
+                    updateInputFiles();
 
                 });
 
@@ -350,14 +387,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     <button
                         id="cropCancel"
-                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
+                        class="px-4 py-2 bg-gray-300 rounded"
                     >
                         Batal
                     </button>
 
                     <button
                         id="cropSave"
-                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                        class="px-4 py-2 bg-blue-600 text-white rounded"
                     >
                         Simpan
                     </button>
@@ -404,7 +441,25 @@ document.addEventListener('DOMContentLoaded', function () {
     =============================== */
 
     new Sortable(preview, {
-        animation: 150
+
+        animation:150,
+
+        onEnd:function(){
+
+            const newFiles = [];
+
+            [...preview.children].forEach((el,index)=>{
+
+                newFiles.push(files[index]);
+
+            });
+
+            files = newFiles;
+
+            updateInputFiles();
+
+        }
+
     });
 
 

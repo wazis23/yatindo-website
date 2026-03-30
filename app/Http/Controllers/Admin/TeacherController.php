@@ -154,7 +154,7 @@ class TeacherController extends Controller
 
         $teacher->update($data);
 
-        return redirect()->route('teachers.index')
+        return redirect()->route('admin.teachers.index')
             ->with('success','Guru berhasil diupdate');
     }
 	

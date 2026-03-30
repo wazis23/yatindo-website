@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin Panel</title>
     @vite(['resources/css/app.css','resources/js/app.js'])
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon"
       type="image/png"
       href="{{ settings('favicon') ? asset('storage/'.settings('favicon')) : asset('favicon.ico') }}">

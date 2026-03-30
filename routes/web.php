@@ -83,6 +83,8 @@ Route::get('/galeri/{id}', [AlbumPageController::class,'show'])
                 ->name('smp');
             Route::get('/smk', [HomeController::class, 'smk'])
                 ->name('smk');
+            Route::get('/smk/{major}', [HomeController::class, 'major'])
+                ->name('major');
 
     });
 

@@ -100,7 +100,7 @@ class SliderController extends Controller
         }
 
         return response()->json([
-            'status' => 'success'
+            'success' => true
         ]);
     }
 
@@ -110,18 +110,23 @@ class SliderController extends Controller
      */
     public function destroy(Slider $slider)
     {
-        if ($slider->image) {
-
-            Storage::disk('public')
-                ->delete($slider->image);
-        }
+        $type = $slider->type;
 
         $slider->delete();
 
-        return back()->with(
-            'success',
-            'Slider berhasil dihapus'
-        );
+        $sliders = Slider::where('type', $type)
+            ->orderBy('order_no')
+            ->get();
+
+        foreach ($sliders as $index => $item) {
+
+            $item->update([
+                'order_no' => $index + 1
+            ]);
+
+        }
+
+        return back();
     }
     
 }

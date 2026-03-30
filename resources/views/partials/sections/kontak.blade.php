@@ -88,18 +88,18 @@
                 Lokasi Sekolah
             </h2>
 
-            <div class="rounded-3xl overflow-hidden shadow-xl">
+            <div class="rounded-3xl overflow-hidden shadow-xl w-full">
 
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.7393845431966!2d107.0237294!3d-6.297937900000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699198f3bc4929%3A0x8f8b6c3cc53dc7cf!2sSMP-SMK%20Tinta%20Emas%20Indonesia%20(Yatindo)!5e0!3m2!1sen!2sid!4v1770870069164!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                    width="100%"
-                    height="350"
-                    style="border:0;"
-                    allowfullscreen=""
-                    loading="lazy">
-                </iframe>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.7393845431966!2d107.0237294!3d-6.297937900000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699198f3bc4929%3A0x8f8b6c3cc53dc7cf!2sSMP-SMK%20Tinta%20Emas%20Indonesia%20(Yatindo)!5e0!3m2!1sen!2sid!4v1770870069164!5m2!1sen!2sid"
+                class="w-full h-[300px] md:h-[450px]"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
 
-            </div>
+        </div>
 
         </div>
 

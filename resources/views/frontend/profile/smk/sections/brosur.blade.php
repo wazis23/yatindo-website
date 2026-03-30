@@ -12,8 +12,8 @@
                 <div class="brosur-card">
 
                     <img
-                        src="{{ asset('images/smp/brosur/depan.jpg') }}"
-                        alt="Brosur SMP Tinta Emas Indonesia"
+                        src="{{ asset('images/smk/brosur/depan.jpg') }}"
+                        alt="Brosur SMK Tinta Emas Indonesia"
                     >
 
                 </div>
@@ -23,8 +23,8 @@
                 <div class="brosur-card">
 
                     <img
-                        src="{{ asset('images/smp/brosur/belakang.jpg') }}"
-                        alt="Brosur SMP Tinta Emas Indonesia"
+                        src="{{ asset('images/smk/brosur/belakang.jpg') }}"
+                        alt="Brosur SMK Tinta Emas Indonesia"
                     >
 
                 </div>
@@ -42,9 +42,9 @@
                 <div class="w-20 h-1 bg-yellow-400 mb-6"></div>
 
                 <p class="text-blue-100 leading-relaxed mb-8">
-                    SMP Tinta Emas Indonesia membuka kesempatan bagi
+                    SMK Tinta Emas Indonesia membuka kesempatan bagi
                     calon peserta didik untuk bergabung dalam
-                    lingkungan pendidikan yang modern, berkarakter,
+                    lingkungan pendidikan yang modern berbasis industri, berkarakter,
                     dan berprestasi.
                 </p>
 
@@ -54,7 +54,7 @@
 
                     {{-- DOWNLOAD BROSUR --}}
                     <a
-                        href="{{ asset('brosur/brosur-smp.pdf') }}"
+                        href="{{ asset('brosur/brosur-smk.pdf') }}"
                         target="_blank"
                         rel="noopener"
                         class="btn-brosur">

@@ -50,7 +50,7 @@
 
 
 
-    {{-- Filter + Edit Button --}}
+    {{-- Filter + Edit --}}
     <div class="mb-6 flex items-center gap-4">
 
         <form method="GET">
@@ -97,11 +97,13 @@
 
                 <tr>
 
+                    <th class="p-4 w-10"></th>
+
                     <th class="p-4 w-40">
                         Preview
                     </th>
 
-                    <th class="p-4 w-32">
+                    <th class="p-4 w-20">
                         Urutan
                     </th>
 
@@ -114,11 +116,20 @@
             </thead>
 
 
-            <tbody>
+            <tbody id="sliderTable">
 
                 @forelse ($sliders as $slider)
 
-                    <tr class="border-t">
+                    <tr
+                        class="border-t"
+                        data-id="{{ $slider->id }}"
+                    >
+
+                        {{-- Drag Handle --}}
+                        <td class="p-4 text-gray-400 cursor-move dragHandle">
+                            ☰
+                        </td>
+
 
                         {{-- Preview --}}
                         <td class="p-4">
@@ -138,7 +149,7 @@
                                 type="number"
                                 value="{{ $slider->order_no }}"
                                 disabled
-                                class="order-input border rounded p-1 w-20 bg-gray-100"
+                                class="order-input border rounded p-1 w-16 bg-gray-100"
                                 data-id="{{ $slider->id }}"
                             >
 
@@ -152,6 +163,7 @@
                                 method="POST"
                                 action="{{ route('admin.sliders.destroy',$slider->id) }}"
                             >
+
                                 @csrf
                                 @method('DELETE')
 
@@ -172,7 +184,7 @@
                     <tr>
 
                         <td
-                            colspan="3"
+                            colspan="4"
                             class="text-center p-6 text-gray-500"
                         >
                             Belum ada slider
@@ -192,100 +204,168 @@
 
 
 
+{{-- SortableJS --}}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+
+
 <script>
 
-let editMode = false;
+    let editMode = false;
 
-const editBtn = document.getElementById('editOrderBtn');
-const inputs  = document.querySelectorAll('.order-input');
+    const editBtn = document.getElementById("editOrderBtn");
 
-editBtn.addEventListener('click', function(){
+    const inputs  = document.querySelectorAll(".order-input");
 
-    if(!editMode){
+    const table   = document.getElementById("sliderTable");
 
-        inputs.forEach(function(input){
 
-            input.disabled = false;
-            input.classList.remove('bg-gray-100');
+    let sortable = new Sortable(table, {
 
-        });
+        handle: ".dragHandle",
 
-        editBtn.innerText = "Simpan";
+        animation: 150,
 
-        editMode = true;
+        disabled: true,
 
-    }else{
+        onEnd: updateOrderNumbers
 
-        let orders = {};
+    });
 
-        inputs.forEach(function(input){
 
-            orders[input.dataset.id] = input.value;
 
-        });
+    function updateOrderNumbers(){
 
-        fetch("{{ route('admin.sliders.updateOrder') }}",{
+        document
+        .querySelectorAll("#sliderTable tr")
+        .forEach(function(row,index){
 
-            method:"POST",
+            const input = row.querySelector(".order-input");
 
-            headers:{
-                "Content-Type":"application/json",
-                "X-CSRF-TOKEN":
-                document.querySelector('meta[name="csrf-token"]').content
-            },
-
-            body:JSON.stringify({
-                orders:orders
-            })
-
-        })
-        .then(res => res.json())
-        .then(data => {
-
-            inputs.forEach(function(input){
-
-                input.disabled = true;
-                input.classList.add('bg-gray-100');
-
-            });
-
-            editBtn.innerText = "Edit";
-
-            editMode = false;
-
-            showSuccess();
+            input.value = index + 1;
 
         });
 
     }
 
-});
+
+
+    editBtn.addEventListener("click",function(){
+
+        if(!editMode){
+
+            sortable.option("disabled", false);
+
+            inputs.forEach(function(input){
+
+                input.disabled = false;
+                input.classList.remove("bg-gray-100");
+
+            });
+
+            this.innerText = "Simpan";
+
+            editMode = true;
+
+        }else{
+
+            sortable.option("disabled", true);
+
+            let orders = {};
+
+            document
+            .querySelectorAll("#sliderTable tr")
+            .forEach(function(row,index){
+
+                orders[row.dataset.id] = index + 1;
+
+            });
+
+
+            fetch("{{ route('admin.sliders.updateOrder') }}",{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    "X-CSRF-TOKEN":
+                    document.querySelector('meta[name="csrf-token"]').content
+                },
+
+                body:JSON.stringify({
+                    orders:orders
+                })
+
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                inputs.forEach(function(input){
+
+                    input.disabled = true;
+                    input.classList.add("bg-gray-100");
+
+                });
+
+                editBtn.innerText = "Edit";
+
+                editMode = false;
+
+                showSuccess();
+
+            });
+
+        }
+
+    });
 
 
 
-function showSuccess(){
+    function showSuccess(){
 
-    const notif = document.createElement('div');
+        const notif = document.createElement("div");
 
-    notif.innerText = "Urutan berhasil diperbarui";
+        notif.innerText = "Urutan berhasil diperbarui";
 
-    notif.className =
-    "fixed top-6 right-6 bg-green-500 text-white px-4 py-2 rounded shadow transition-opacity duration-500";
+        notif.className =
+        "fixed top-6 right-6 bg-green-500 text-white px-4 py-2 rounded shadow transition-opacity duration-500";
 
-    document.body.appendChild(notif);
-
-    setTimeout(function(){
-
-        notif.style.opacity = "0";
+        document.body.appendChild(notif);
 
         setTimeout(function(){
 
-            notif.remove();
+            notif.style.opacity = "0";
 
-        },500);
+            setTimeout(function(){
 
-    },2000);
+                notif.remove();
 
-}
+            },500);
+
+        },2000);
+
+    }
+    
+document.addEventListener("DOMContentLoaded", function(){
+
+    const slides = document.querySelectorAll(".slider-preview");
+
+    if(slides.length <= 1) return;
+
+    let index = 0;
+
+    setInterval(function(){
+
+        slides[index].classList.remove("opacity-100");
+        slides[index].classList.add("opacity-0");
+
+        index = (index + 1) % slides.length;
+
+        slides[index].classList.remove("opacity-0");
+        slides[index].classList.add("opacity-100");
+
+    }, 3000);
+
+});
 
 </script>

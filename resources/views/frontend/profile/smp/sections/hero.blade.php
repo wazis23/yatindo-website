@@ -3,14 +3,23 @@
     {{-- Background --}}
     <div class="absolute inset-0">
 
-        <img src="{{ asset('images/smp/hero/hero1.jpg') }}"
-        class="hero-slide active absolute inset-0 w-full h-full object-cover">
+        @forelse ($heroSliders as $index => $slider)
 
-        <img src="{{ asset('images/smp/hero/hero2.jpg') }}"
-        class="hero-slide absolute inset-0 w-full h-full object-cover">
+            <img
+                src="{{ asset('storage/'.$slider->image) }}"
+                class="hero-slide absolute inset-0 w-full h-full object-cover
+                {{ $index == 0 ? 'active' : '' }}"
+            >
 
-        <img src="{{ asset('images/smp/hero/hero3.jpg') }}"
-        class="hero-slide absolute inset-0 w-full h-full object-cover">
+        @empty
+
+            {{-- fallback jika slider kosong --}}
+            <img
+                src="{{ asset('images/default-hero.jpg') }}"
+                class="hero-slide active absolute inset-0 w-full h-full object-cover"
+            >
+
+        @endforelse
 
     </div>
 
