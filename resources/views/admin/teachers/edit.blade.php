@@ -1,215 +1,391 @@
 <x-layouts.admin>
 
-<div class="p-6 max-w-4xl mx-auto">
+<div class="p-6 max-w-5xl mx-auto">
 
-    <div class="bg-white rounded-xl shadow-lg p-8">
+<div class="bg-white rounded-2xl shadow-lg p-8">
 
-        <h1 class="text-2xl font-bold text-gray-800 mb-6">
-            Edit Guru
-        </h1>
+<h1 class="text-2xl font-bold mb-6">Edit Guru</h1>
 
-        <form id="teacherForm"
-              action="{{ route('admin.teachers.update', $teacher->id) }}"
-              method="POST"
-              enctype="multipart/form-data"
-              class="space-y-6">
-        @csrf
-        @method('PUT')
+<form method="POST"
+      action="{{ route('admin.teachers.update',$teacher->id) }}"
+      enctype="multipart/form-data"
+      id="teacherForm">
+@csrf
+@method('PUT')
 
-        <div class="grid md:grid-cols-2 gap-6">
+@php
+    $selectedSubjects = $teacher->subjects ?? collect();
+    $selectedMajors  = $teacher->majors ?? collect();
+@endphp
 
-            {{-- Nama --}}
-            <div>
-                <label class="block text-sm font-medium mb-1">Nama</label>
-                <input type="text"
-                       name="name"
-                       value="{{ old('name',$teacher->name) }}"
-                       required
-                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200">
-            </div>
+<div class="grid md:grid-cols-2 gap-6">
 
-            {{-- Unit --}}
-            <div>
-                <label class="block text-sm font-medium mb-1">Unit</label>
-                <select name="unit"
-                        id="unitField"
-                        class="w-full border rounded-lg px-3 py-2">
+    {{-- Nama --}}
+    <div>
+        <label class="text-sm font-medium">Nama</label>
+        <input type="text" name="name"
+               value="{{ $teacher->name }}"
+               class="w-full border rounded-lg px-3 py-2 mt-1">
+    </div>
 
-                    <option value="smp" {{ $teacher->unit=='smp'?'selected':'' }}>
-                        SMP
-                    </option>
+    {{-- Unit --}}
+    <div>
+        <label class="text-sm font-medium">Unit</label>
+        <select name="unit" id="unitField"
+                class="w-full border rounded-lg px-3 py-2 mt-1">
+            <option value="smp" {{ $teacher->unit=='smp'?'selected':'' }}>SMP</option>
+            <option value="smk" {{ $teacher->unit=='smk'?'selected':'' }}>SMK</option>
+        </select>
+    </div>
 
-                    <option value="smk" {{ $teacher->unit=='smk'?'selected':'' }}>
-                        SMK
-                    </option>
+    {{-- Jenis --}}
+    <div>
+        <label class="text-sm font-medium">Jenis</label>
+        <select name="teacher_type" id="teacherType"
+                class="w-full border rounded-lg px-3 py-2 mt-1">
+            <option value="umum" {{ $teacher->teacher_type=='umum'?'selected':'' }}>Guru Umum</option>
+            <option value="produktif" {{ $teacher->teacher_type=='produktif'?'selected':'' }}>Guru Produktif</option>
+            <option value="staff" {{ $teacher->teacher_type=='staff'?'selected':'' }}>Staff</option>
+        </select>
+    </div>
 
-                </select>
-            </div>
+    {{-- Jabatan --}}
+    <div>
+        <label class="text-sm font-medium">Jabatan</label>
+        <select name="position_id"
+                class="w-full border rounded-lg px-3 py-2 mt-1">
+            <option value="">-- Tidak Ada --</option>
+            @foreach($positions as $pos)
+                <option value="{{ $pos->id }}"
+                    {{ $teacher->position_id==$pos->id?'selected':'' }}>
+                    {{ $pos->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-            {{-- Jenis --}}
-            <div>
-                <label class="block text-sm font-medium mb-1">Jenis</label>
-                <select name="teacher_type"
-                        id="teacherType"
-                        class="w-full border rounded-lg px-3 py-2">
+    {{-- MAPEL UMUM --}}
+    <div id="subjectWrapper" class="md:col-span-1">
+        <label class="text-sm font-medium">Mata Pelajaran</label>
 
-                    <option value="umum"
-                        {{ $teacher->teacher_type=='umum'?'selected':'' }}>
-                        Guru Umum
-                    </option>
+        <div class="border rounded-xl p-3 bg-gray-50 mt-1">
 
-                    <option value="produktif"
-                        {{ $teacher->teacher_type=='produktif'?'selected':'' }}>
-                        Guru Produktif
-                    </option>
+            <input type="text"
+                   placeholder="Cari mapel..."
+                   class="w-full mb-3 px-3 py-2 border rounded-lg text-sm"
+                   onkeyup="filterMapel(this)">
 
-                    <option value="staff"
-                        {{ $teacher->teacher_type=='staff'?'selected':'' }}>
-                        Staff
-                    </option>
+            <div class="max-h-40 overflow-y-auto space-y-2">
 
-                </select>
-            </div>
+                @foreach($subjects as $s)
+                    @if($s->type == 'umum')
+                        <label class="flex items-center justify-between px-3 py-2 border rounded-lg cursor-pointer hover:bg-blue-50 mapel-item"
+                               data-unit="{{ $s->unit }}">
 
-            {{-- Mata Pelajaran --}}
-            <div id="subjectWrapper">
-                <label class="block text-sm font-medium mb-1">Mata Pelajaran</label>
-                <input type="text"
-                       name="subject"
-                       value="{{ old('subject',$teacher->subject) }}"
-                       class="w-full border rounded-lg px-3 py-2">
-            </div>
+                            <span>{{ $s->name }}</span>
 
-            {{-- Jabatan --}}
-            <div>
-                <label class="block text-sm font-medium mb-1">Jabatan</label>
-                <select name="position_id"
-                        class="w-full border rounded-lg px-3 py-2">
+                            <input type="checkbox"
+                                   name="subject_ids[]"
+                                   value="{{ $s->id }}"
+                                   {{ $selectedSubjects->contains($s->id) ? 'checked' : '' }}>
+                        </label>
+                    @endif
+                @endforeach
 
-                    <option value="">-- Tidak Ada --</option>
-
-                    @foreach($positions as $pos)
-                        <option value="{{ $pos->id }}"
-                            {{ $teacher->position_id==$pos->id?'selected':'' }}>
-                            {{ $pos->name }}
-                        </option>
-                    @endforeach
-
-                </select>
-            </div>
-
-            {{-- Jurusan --}}
-            <div id="majorWrapper">
-                <label class="block text-sm font-medium mb-1">Jurusan (SMK)</label>
-                <select name="major_id"
-                        id="majorField"
-                        class="w-full border rounded-lg px-3 py-2">
-
-                    <option value="">-- Tidak Ada --</option>
-
-                    @foreach($majors as $major)
-                        <option value="{{ $major->id }}"
-                            {{ $teacher->major_id==$major->id?'selected':'' }}>
-                            {{ $major->name }}
-                        </option>
-                    @endforeach
-
-                </select>
             </div>
 
         </div>
+    </div>
 
-        {{-- FOTO --}}
-        <div>
-            <label class="block text-sm font-medium mb-2">Foto</label>
+    <div></div>
 
-            <div class="flex items-center gap-4">
+</div>
 
-                <label class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
-                    Pilih Foto
-                    <input type="file"
-                           name="photo"
-                           id="photoInput"
-                           accept="image/*"
-                           class="hidden">
-                </label>
+{{-- ================= JURUSAN ================= --}}
+<div id="majorWrapper" class="mt-8 hidden">
 
-                <span id="fileName" class="text-sm text-gray-500">
-                    Ganti foto (opsional)
-                </span>
+    <label class="text-sm font-medium mb-2 block">
+        Jurusan (SMK)
+    </label>
+
+    <div id="majorContainer" class="flex flex-wrap gap-3">
+
+        @foreach($majors as $major)
+
+            @php
+                $isSelected = $selectedMajors->contains($major->id);
+            @endphp
+
+            <div class="major-item flex items-start gap-2"
+                data-id="{{ $major->id }}">
+
+                {{-- INPUT (WAJIB ADA) --}}
+                <input type="checkbox"
+                    name="majors[]"
+                    value="{{ $major->id }}"
+                    class="hidden major-input"
+                    {{ $isSelected ? 'checked' : '' }}>
+
+                {{-- BUTTON --}}
+                <button type="button"
+                    class="major-btn px-4 py-2 rounded-lg border transition
+                    {{ $isSelected ? 'bg-yellow-400' : 'bg-gray-100' }}"
+                    data-id="{{ $major->id }}">
+                    {{ $major->name }}
+                </button>
+
+                {{-- DROPDOWN --}}
+                <div class="mapel-dropdown {{ $isSelected ? '' : 'hidden' }}">
+                    <div class="border rounded-lg p-2 bg-gray-50 min-w-[180px] max-h-40 overflow-y-auto">
+
+                        @foreach($subjects as $s)
+                            @if($s->major_id == $major->id)
+                                <label class="flex items-center justify-between px-2 py-1 text-sm hover:bg-blue-50 rounded">
+
+                                    <span>{{ $s->name }}</span>
+
+                                    <input type="checkbox"
+                                        name="subject_ids[]"
+                                        value="{{ $s->id }}"
+                                        {{ $selectedSubjects->contains($s->id) ? 'checked' : '' }}>
+                                </label>
+                            @endif
+                        @endforeach
+
+                    </div>
+                </div>
 
             </div>
 
-            <div class="mt-4">
-                <img id="previewImage"
-                     src="{{ $teacher->photo ? asset('storage/'.$teacher->photo) : '' }}"
-                     class="w-28 h-28 rounded-full object-cover shadow {{ $teacher->photo ? '' : 'hidden' }}">
-            </div>
-        </div>
+        @endforeach
 
-        {{-- BUTTON --}}
-        <div class="flex justify-end gap-3 pt-6 border-t">
+    </div>
 
-            <a href="{{ route('admin.teachers.index') }}"
-               class="px-4 py-2 border rounded-lg hover:bg-gray-100">
-                Batal
-            </a>
+</div>
 
-            <button type="submit"
-                class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
-                Update
-            </button>
+{{-- FOTO --}}
+<div>
+    <label class="block text-sm font-medium mb-2">Foto</label>
 
-        </div>
+    {{-- UPLOAD BUTTON --}}
+    <div class="flex items-center gap-4 mb-3">
 
-        <input type="hidden" name="force_replace" id="forceReplace" value="0">
+        <label class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
+            Pilih Foto
+            <input type="file"
+                   name="photo"
+                   id="photoInput"
+                   accept="image/*"
+                   class="hidden">
+        </label>
 
-        </form>
+        <span id="fileName" class="text-sm text-gray-500">
+            Belum ada file dipilih
+        </span>
+
+    </div>
+
+    {{-- PREVIEW --}}
+    <div id="previewWrapper" class="relative w-32 h-32 hidden">
+
+        <img id="previewImage"
+             class="w-32 h-32 rounded-full object-cover shadow">
+
+        {{-- DELETE BUTTON --}}
+        <button type="button"
+                id="removePhoto"
+                class="absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center shadow">
+            ✕
+        </button>
 
     </div>
 </div>
-
-{{-- SCRIPT (SAMA DENGAN CREATE) --}}
+@if($teacher->photo)
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
-    const form = document.getElementById("teacherForm");
-    const teacherType = document.getElementById("teacherType");
-    const unitField = document.getElementById("unitField");
-    const majorWrap = document.getElementById("majorWrapper");
-    const majorField = document.getElementById("majorField");
-    const subjectWrap = document.getElementById("subjectWrapper");
-    const photoInput = document.getElementById("photoInput");
-    const previewImg = document.getElementById("previewImage");
-    const fileName = document.getElementById("fileName");
-    const forceReplace = document.getElementById("forceReplace");
+    const previewWrapper = document.getElementById("previewWrapper");
+    const previewImage = document.getElementById("previewImage");
 
-    function handleFormLogic(){
+    previewWrapper.classList.remove("hidden");
+    previewImage.src = "{{ asset('storage/'.$teacher->photo) }}";
 
-        if (unitField.value === "smp") {
-            majorWrap.style.display = "none";
-            majorField.value = "";
+});
+</script>
+@endif
+    {{-- FLAG HAPUS --}}
+    <input type="hidden" name="remove_photo" id="removePhotoInput" value="0">
+
+</div>
+
+{{-- BUTTON --}}
+<div class="flex justify-end gap-3 mt-8">
+    <a href="{{ route('admin.teachers.index') }}"
+       class="px-4 py-2 border rounded-lg">
+       Batal
+    </a>
+
+    <button class="px-6 py-2 bg-blue-600 text-white rounded-lg">
+        Update
+    </button>
+</div>
+
+</form>
+</div>
+</div>
+
+{{-- ================= SCRIPT (SAMA DENGAN CREATE) ================= --}}
+<script>
+
+const container = document.getElementById("majorContainer");
+const items = Array.from(container.querySelectorAll(".major-item"));
+const teacherType = document.getElementById("teacherType");
+const unitField = document.getElementById("unitField");
+const subjectWrap = document.getElementById("subjectWrapper");
+const majorWrap = document.getElementById("majorWrapper");
+
+let selected = [];
+
+document.querySelectorAll(".major-btn").forEach(btn => {
+    if(btn.dataset.selected === "1"){
+        selected.push(btn.dataset.id);
+    }
+});
+
+function renderOrder() {
+
+    const selectedItems = items
+        .filter(i => selected.includes(i.dataset.id));
+
+    const unselectedItems = items
+        .filter(i => !selected.includes(i.dataset.id));
+
+    container.innerHTML = "";
+
+    [...selectedItems, ...unselectedItems].forEach(el => {
+        container.appendChild(el);
+    });
+}
+
+document.querySelectorAll(".major-btn").forEach(btn => {
+
+    btn.addEventListener("click", function(){
+
+        const id = this.dataset.id;
+        const item = this.closest(".major-item");
+        const input = item.querySelector(".major-input");
+        const dropdown = item.querySelector(".mapel-dropdown");
+
+        if (selected.includes(id)) {
+
+            selected = selected.filter(i => i !== id);
+            input.checked = false;
+
+            // 🔥 RESET MAPEL DI DALAM JURUSAN INI
+            item.querySelectorAll("input[name='subject_ids[]']").forEach(el=>{
+                el.checked = false;
+            });
+
+            this.classList.remove("bg-yellow-400");
+            this.classList.add("bg-gray-100");
+            dropdown.classList.add("hidden");
+
         } else {
-            if (teacherType.value === "produktif") {
-                majorWrap.style.display = "block";
-            } else {
-                majorWrap.style.display = "none";
-                majorField.value = "";
-            }
+
+            selected.push(id);
+            input.checked = true;
+            this.classList.remove("bg-gray-100");
+            this.classList.add("bg-yellow-400");
+            dropdown.classList.remove("hidden");
+
         }
 
-        if (teacherType.value === "staff") {
-            subjectWrap.style.display = "none";
-        } else {
-            subjectWrap.style.display = "block";
+        renderOrder();
+    });
+
+});
+
+function clearAllMapel(){
+    document.querySelectorAll("input[name='subject_ids[]']").forEach(el=>{
+        el.checked = false;
+    });
+}
+// FILTER MAPEL
+function filterMapel(input){
+    let val = input.value.toLowerCase();
+    document.querySelectorAll(".mapel-item").forEach(el=>{
+        el.style.display = el.innerText.toLowerCase().includes(val) ? "flex" : "none";
+    });
+}
+
+// FILTER UNIT
+function filterMapelByUnit(unit){
+    document.querySelectorAll(".mapel-item").forEach(el=>{
+        el.style.display = (el.dataset.unit === unit) ? "flex" : "none";
+    });
+}
+
+// FORM LOGIC
+function handleForm(){
+
+    if(unitField.value === "smp"){
+        teacherType.value = "umum";
+        teacherType.querySelector('[value="produktif"]').style.display="none";
+
+        subjectWrap.style.display="block";
+        majorWrap.style.display="none";
+
+    }else{
+
+        teacherType.querySelector('[value="produktif"]').style.display="block";
+
+        if(teacherType.value === "produktif"){
+            subjectWrap.style.display="none";
+            majorWrap.style.display="block";
+            clearAllMapel();
+        }else{
+            subjectWrap.style.display="block";
+            majorWrap.style.display="none";
         }
     }
 
-    teacherType.addEventListener("change", handleFormLogic);
-    unitField.addEventListener("change", handleFormLogic);
-    handleFormLogic();
+    filterMapelByUnit(unitField.value);
+}
 
+// EVENT
+teacherType.addEventListener("change", handleForm);
+unitField.addEventListener("change", handleForm);
+
+handleForm();
+
+// VALIDASI
+document.getElementById("teacherForm").addEventListener("submit", function(e){
+
+    if(teacherType.value === "produktif"){
+
+        if(selected.length === 0){
+            alert("Minimal pilih 1 jurusan!");
+            e.preventDefault();
+        }
+    }
+});
+
+
+// preview foto
+document.addEventListener("DOMContentLoaded", function(){
+
+    const photoInput = document.getElementById("photoInput");
+    const previewImage = document.getElementById("previewImage");
+    const previewWrapper = document.getElementById("previewWrapper");
+    const removeBtn = document.getElementById("removePhoto");
+    const removeInput = document.getElementById("removePhotoInput");
+    const fileName = document.getElementById("fileName");
+
+    // =========================
+    // PREVIEW FOTO
+    // =========================
     photoInput.addEventListener("change", function(e){
+
         const file = e.target.files[0];
 
         if(file){
@@ -218,12 +394,30 @@ document.addEventListener("DOMContentLoaded", function(){
             const reader = new FileReader();
 
             reader.onload = function(event){
-                previewImg.src = event.target.result;
-                previewImg.classList.remove("hidden");
+                previewImage.src = event.target.result;
+                previewWrapper.classList.remove("hidden");
             };
 
             reader.readAsDataURL(file);
+
+            // reset hapus flag
+            removeInput.value = 0;
         }
+    });
+
+    // =========================
+    // HAPUS FOTO (X BUTTON)
+    // =========================
+    removeBtn.addEventListener("click", function(){
+
+        previewWrapper.classList.add("hidden");
+        previewImage.src = "";
+        photoInput.value = "";
+        fileName.textContent = "Belum ada file dipilih";
+
+        // tandai untuk dihapus di backend
+        removeInput.value = 1;
+
     });
 
 });

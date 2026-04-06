@@ -61,8 +61,29 @@
 
 
                         {{-- MAPEL --}}
+                        @php
+                            $mapel = $teacher->subjects->pluck('name');
+                        @endphp
+
                         <p class="text-gray-500 text-sm">
-                            {{ $teacher->subject ?? 'Guru Produktif' }}
+
+                            {{-- tampilkan max 2 --}}
+                            {{ $mapel->take(2)->join(', ') }}
+
+                            {{-- kalau lebih dari 2 --}}
+                            @if($mapel->count() > 2)
+                                +{{ $mapel->count() - 2 }}
+                            @endif
+
+                            {{-- fallback --}}
+                            @if($mapel->count() == 0)
+                                Guru Produktif
+                            @endif
+
+                        </p>
+                        
+                        <p class="text-xs text-gray-400">
+                            {{ $teacher->position->name ?? '-' }}
                         </p>
 
                     </div>

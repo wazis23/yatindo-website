@@ -110,7 +110,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\Admin\AlbumController as AdminAlbumController;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
-
+use App\Http\Controllers\Admin\SubjectController;
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES (PROTECTED)
@@ -247,7 +247,13 @@ Route::prefix('admin')
             ->middleware('permission:manage settings')
             ->name('settings.update');
         
-        
+        /*
+        |--------------------------------------------------------------------------
+        | SUBJECTS (MATA PELAJARAN)
+        |--------------------------------------------------------------------------
+        */
+        Route::resource('subjects', SubjectController::class)
+            ->middleware('permission:manage subjects');
     });
 
 

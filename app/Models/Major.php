@@ -14,6 +14,10 @@ class Major extends Model
         'is_active'
     ];
 
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
     public function teachers()
     {
         return $this->hasMany(Teacher::class);

@@ -141,7 +141,17 @@
                     label="Guru"
                 />
             @endcan
-
+            
+            {{-- SUBJECTS --}}
+            @can('manage subjects')
+                @php $active = request()->routeIs('admin.subjects.*'); @endphp
+                <x-admin.nav-item
+                    route="admin.subjects.index"
+                    :active="$active"
+                    icon="book"
+                    label="Mata Pelajaran"
+                />
+            @endcan
 
             {{-- USERS (SUPER ADMIN ONLY) --}}
             @can('manage users')

@@ -21,7 +21,7 @@
         <div class="flex items-center justify-between mb-10">
 
             <h2 class="text-3xl font-bold">
-                Guru SMP
+                Guru SMK Tinta Emas Indonesia
             </h2>
 
             <div class="flex gap-3">
@@ -62,8 +62,12 @@
                             {{ $teacher->name }}
                         </h3>
 
-                        <p class="text-gray-500 text-sm">
-                            {{ $teacher->subject ?? 'Guru' }}
+                        <p class="text-sm text-gray-500">
+                            {{ $teacher->subjects->pluck('name')->join(', ') ?: 'Guru' }}
+                        </p>
+
+                        <p class="text-xs text-gray-400">
+                            {{ $teacher->position->name ?? '-' }}
                         </p>
 
                     </div>

@@ -18,11 +18,19 @@ class Teacher extends Model
         'is_active'
     ];
 
-    public function major()
+    public function majors()
     {
-        return $this->belongsTo(Major::class);
+        return $this->belongsToMany(Major::class);
     }
 
+    public function subjects()
+    {
+        return $this->belongsToMany(
+            \App\Models\Subject::class,
+            'subject_teacher'
+        );
+    }
+    
     public function position()
     {
         return $this->belongsTo(Position::class);

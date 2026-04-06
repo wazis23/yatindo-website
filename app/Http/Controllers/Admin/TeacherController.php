@@ -7,162 +7,203 @@ use App\Models\Teacher;
 use App\Models\Position;
 use App\Models\Major;
 use Illuminate\Http\Request;
+use App\Models\Subject;
+use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Teacher::with(['position','major']);
+        $query = Teacher::with(['position','majors','subjects']);
 
-    // 🔎 Search Nama
-    if ($request->search) {
-        $query->where('name', 'like', '%' . $request->search . '%');
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->unit) {
+            $query->where('unit', $request->unit);
+        }
+
+        if ($request->position_id) {
+            $query->where('position_id', $request->position_id);
+        }
+
+        if ($request->major_id) {
+            $query->whereHas('majors', function ($q) use ($request) {
+                $q->where('majors.id', $request->major_id);
+            });
+        }
+
+        $teachers = $query->latest()->paginate(10)->withQueryString();
+
+        $positions = Position::all();
+        $majors = Major::all();
+
+        return view('admin.teachers.index', compact('teachers','positions','majors'));
     }
 
-    // 🏫 Filter Unit
-    if ($request->unit) {
-        $query->where('unit', $request->unit);
-    }
-
-    // 🏷 Filter Jabatan
-    if ($request->position_id) {
-        $query->where('position_id', $request->position_id);
-    }
-
-    // 🏫 Filter Jurusan
-    if ($request->major_id) {
-        $query->where('major_id', $request->major_id);
-    }
-
-    $teachers = $query->latest()->paginate(10)->withQueryString();
-
-    $positions = Position::all();
-    $majors = Major::all();
-
-    return view('admin.teachers.index', compact(
-        'teachers',
-        'positions',
-        'majors'
-    ));
-    }
-	
     public function create()
     {
         $positions = Position::where('is_active',1)->get();
         $majors    = Major::where('is_active',1)->get();
+        $subjects  = Subject::where('is_active',1)->get();
 
-        return view('admin.teachers.create', compact('positions','majors'));
+        $selectedMajors = collect();
+        $selectedSubjects = collect();
+
+        return view('admin.teachers.create', compact(
+            'positions','majors','subjects','selectedMajors','selectedSubjects'
+        ));
     }
-	public function checkPosition(Request $request)
-	{
-		$position = Position::find($request->position_id);
-
-		if (!$position || !$position->is_exclusive) {
-			return response()->json(['status' => 'ok']);
-		}
-
-		$existing = Teacher::where('position_id', $position->id)->first();
-
-		if (!$existing) {
-			return response()->json(['status' => 'ok']);
-		}
-
-		return response()->json([
-			'status' => 'conflict',
-			'teacher' => [
-				'id'    => $existing->id,
-				'name'  => $existing->name,
-				'photo' => $existing->photo,
-				'unit'  => strtoupper($existing->unit)
-			]
-		]);
-	}
 
     public function store(Request $request)
-	{
-		$request->validate([
-			'name'         => 'required|string|max:255',
-			'unit'         => 'required|in:smp,smk',
-			'teacher_type' => 'required|in:umum,produktif,staff',
-		]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'unit' => 'required|in:smp,smk',
+            'teacher_type' => 'required|in:umum,produktif,staff',
+        ]);
 
-		$data = $request->all();
+        $data = $request->only([
+            'name','nip','unit','teacher_type','position_id','is_active'
+        ]);
 
-		$position = Position::find($request->position_id);
+        // =========================
+        // FOTO
+        // =========================
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('teachers', 'public');
+        }
 
-		if ($position && $position->is_exclusive) {
+        $teacher = Teacher::create($data);
 
-			$existing = Teacher::where('position_id', $position->id)->first();
+        // =========================
+        // MAPEL
+        // =========================
+        $subjects = $request->subject_ids ?? [];
 
-			if ($existing && $request->force_replace != 1) {
-				return back()
-					->withErrors([
-						'position_id' => 'Jabatan ini sudah digunakan oleh '.$existing->name
-					])
-					->withInput();
-			}
+        if ($request->teacher_type === 'staff') {
+            $teacher->subjects()->detach();
+        } else {
+            $teacher->subjects()->sync($subjects);
+        }
 
-			if ($existing && $request->force_replace == 1) {
-				$existing->update([
-					'position_id' => null
-				]);
-			}
-		}
+        // =========================
+        // JURUSAN
+        // =========================
+        if ($request->teacher_type === 'produktif') {
 
-		if ($request->teacher_type === 'umum') {
-			$data['major_id'] = null;
-		}
+            if (!$request->majors || count($request->majors) == 0) {
+                return back()->withErrors([
+                    'majors' => 'Minimal pilih 1 jurusan'
+                ])->withInput();
+            }
 
-		if ($request->teacher_type === 'staff') {
-			$data['major_id'] = null;
-			$data['subject']  = null;
-		}
+            $teacher->majors()->sync($request->majors);
 
-		if ($request->hasFile('photo')) {
-			$data['photo'] = $request->file('photo')
-				->store('teachers','public');
-		}
+        } else {
+            $teacher->majors()->detach();
+        }
+        return redirect()
+            ->route('admin.teachers.index')
+            ->with('success', 'Guru berhasil ditambahkan');
+    }
 
-		Teacher::create($data);
-
-		return redirect()
-			->route('admin.teachers.index')
-			->with('success','Guru berhasil ditambahkan');
-	}
     public function edit(Teacher $teacher)
     {
+        $teacher->load(['subjects','majors']);
+
         $positions = Position::where('is_active',1)->get();
         $majors    = Major::where('is_active',1)->get();
+        $subjects  = Subject::where('is_active',1)->get();
 
-        return view('admin.teachers.edit',
-            compact('teacher','positions','majors'));
+        return view('admin.teachers.edit', compact(
+            'teacher','positions','majors','subjects'
+        ));
     }
 
     public function update(Request $request, Teacher $teacher)
     {
         $request->validate([
-            'name' => 'required',
-            'unit' => 'required',
+            'name' => 'required|string|max:255',
+            'unit' => 'required|in:smp,smk',
+            'teacher_type' => 'required|in:umum,produktif,staff',
         ]);
 
-        $data = $request->all();
+        $data = $request->only([
+            'name','nip','unit','teacher_type','position_id','is_active'
+        ]);
 
+        // =========================
+        // HAPUS FOTO (X BUTTON)
+        // =========================
+        if ($request->remove_photo == 1) {
+            $this->deletePhoto($teacher->photo);
+            $data['photo'] = null;
+        }
+
+        // =========================
+        // UPLOAD FOTO BARU
+        // =========================
         if ($request->hasFile('photo')) {
+
+            $this->deletePhoto($teacher->photo);
+
             $data['photo'] = $request->file('photo')
-                ->store('teachers','public');
+                ->store('teachers', 'public');
         }
 
         $teacher->update($data);
 
-        return redirect()->route('admin.teachers.index')
-            ->with('success','Guru berhasil diupdate');
+        // =========================
+        // MAPEL
+        // =========================
+        $subjects = $request->subject_ids ?? [];
+
+        if ($request->teacher_type === 'staff') {
+            $teacher->subjects()->detach();
+        } else {
+            $teacher->subjects()->sync($subjects);
+        }
+
+        // =========================
+        // JURUSAN
+        // =========================
+        if ($request->teacher_type === 'produktif') {
+
+            if (!$request->majors || count($request->majors) == 0) {
+                return back()->withErrors([
+                    'majors' => 'Minimal pilih 1 jurusan'
+                ])->withInput();
+            }
+
+            $teacher->majors()->sync($request->majors);
+
+        } else {
+            $teacher->majors()->detach();
+        }
+
+        return redirect()
+            ->route('admin.teachers.index')
+            ->with('success', 'Guru berhasil diupdate');
     }
-	
-	
+
     public function destroy(Teacher $teacher)
     {
+        $this->deletePhoto($teacher->photo);
+
         $teacher->delete();
 
         return back()->with('success','Guru dihapus');
+    }
+
+    // =========================
+    // HELPER DELETE FOTO
+    // =========================
+    private function deletePhoto($path)
+    {
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }

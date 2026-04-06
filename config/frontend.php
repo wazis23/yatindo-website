@@ -28,6 +28,7 @@ return [
             'sections' => [
 
                 'hero' => true,
+                'jurusan' => true,
                 'sambutan' => true,
                 'visi_misi' => true,
                 'keunggulan' => true,

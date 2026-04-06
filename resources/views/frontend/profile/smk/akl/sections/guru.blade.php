@@ -10,7 +10,6 @@
             </h2>
 
             <div class="flex gap-3">
-
                 <button id="guruPrev"
                     class="w-10 h-10 rounded-full bg-gray-200 hover:bg-yellow-400 transition">
                     ←
@@ -20,7 +19,6 @@
                     class="w-10 h-10 rounded-full bg-gray-200 hover:bg-yellow-400 transition">
                     →
                 </button>
-
             </div>
 
         </div>
@@ -34,23 +32,16 @@
 
                 @foreach ($teachers as $teacher)
 
-                    <div
-                        class="w-[220px] flex-shrink-0 text-center select-none guru-card">
+                    <div class="w-[220px] flex-shrink-0 text-center select-none guru-card">
 
                         {{-- FOTO --}}
                         @if ($teacher->photo)
-
                             <img
                                 src="{{ asset('storage/'.$teacher->photo) }}"
                                 class="w-40 h-40 object-cover rounded-full mx-auto mb-4 shadow"
                             >
-
                         @else
-
-                            <div
-                                class="w-40 h-40 bg-gray-200 rounded-full mx-auto mb-4">
-                            </div>
-
+                            <div class="w-40 h-40 bg-gray-200 rounded-full mx-auto mb-4"></div>
                         @endif
 
 
@@ -61,8 +52,25 @@
 
 
                         {{-- MAPEL --}}
+                        @php
+                            $mapel = $teacher->subjects->pluck('name');
+                        @endphp
+
                         <p class="text-gray-500 text-sm">
-                            {{ $teacher->subject ?? 'Guru Produktif' }}
+
+                            {{-- tampilkan max 2 --}}
+                            {{ $mapel->take(2)->join(', ') }}
+
+                            {{-- kalau lebih dari 2 --}}
+                            @if($mapel->count() > 2)
+                                +{{ $mapel->count() - 2 }}
+                            @endif
+
+                            {{-- fallback --}}
+                            @if($mapel->count() == 0)
+                                Guru Produktif
+                            @endif
+
                         </p>
 
                     </div>

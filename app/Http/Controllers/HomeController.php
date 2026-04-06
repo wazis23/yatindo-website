@@ -60,7 +60,7 @@ class HomeController extends Controller
 
         $teachers = Teacher::with([
                 'position',
-                'major'
+                'majors'
             ])
             ->where('unit', 'smp')
             ->where('is_active', 1)
@@ -99,7 +99,7 @@ class HomeController extends Controller
 
         $teachers = Teacher::with([
                 'position',
-                'major'
+                'majors'
             ])
             ->where('unit', 'smk')
             ->where('is_active', 1)
@@ -127,49 +127,35 @@ class HomeController extends Controller
 
     public function major($major)
     {
-
         $majorName = strtoupper($major);
         $majorTitle = config('frontend.majors.'.$major.'.name');
         $majorLogo = config('frontend.majors.'.$major.'.logo');
-
-        /* ===============================
-        HERO SLIDER JURUSAN
-        =============================== */
 
         $heroSliders = Slider::where('type', $major.'_hero')
             ->orderBy('order_no')
             ->get();
 
-
-        /* ===============================
-        KEPALA PROGRAM
-        =============================== */
-
-        $kaprog = Teacher::with('position','major')
+        // 🔥 KAPROG
+        $kaprog = Teacher::with(['position','majors'])
             ->where('unit', 'smk')
             ->whereHas('position', function ($query) {
                 $query->where('name', 'Kepala Program');
             })
-            ->whereHas('major', function ($query) use ($majorName) {
+            ->whereHas('majors', function ($query) use ($majorName) {
                 $query->where('name', $majorName);
             })
             ->where('is_active', 1)
             ->first();
 
-
-        /* ===============================
-        GURU PRODUKTIF + TOOLMAN
-        =============================== */
-
-        $teachers = Teacher::with(['position','major'])
+        // 🔥 TEACHERS
+        $teachers = Teacher::with(['position','majors'])
             ->where('unit', 'smk')
-            ->whereHas('major', function ($query) use ($majorName) {
+            ->whereHas('majors', function ($query) use ($majorName) {
                 $query->where('name', $majorName);
             })
             ->where('is_active', 1)
             ->orderBy('name')
             ->get();
-
 
         return view(
             'frontend.profile.smk.'.$major.'.index',

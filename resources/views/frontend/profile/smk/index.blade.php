@@ -4,6 +4,10 @@
 @include('frontend.profile.smk.sections.hero')
 @endif
 
+@if(config('frontend.profile.smk.sections.jurusan'))
+@include('frontend.profile.smk.sections.jurusan')
+@endif
+
 @if(config('frontend.profile.smk.sections.video'))
 @include('frontend.profile.smk.sections.video')
 @endif
