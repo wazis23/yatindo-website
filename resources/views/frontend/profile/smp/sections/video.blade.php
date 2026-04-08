@@ -65,12 +65,11 @@
                 <div class="video-wrapper">
 
                     <iframe
-                        src="https://www.youtube.com/embed/VIDEO_ID"
-                        title="Video Profil SMP Tinta Emas Indonesia"
-                        frameborder="0"
+                        class="w-full h-[300px] md:h-[420px]"
+                        src="https://www.youtube.com/embed/85Lt6RyoXQk?si=PPrZxYwDhhwgGM-y&autoplay=1&mute=0"
+                        allow="autoplay; encrypted-media"
                         allowfullscreen>
                     </iframe>
-
                 </div>
 
 

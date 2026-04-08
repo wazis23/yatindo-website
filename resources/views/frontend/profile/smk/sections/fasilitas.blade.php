@@ -1,4 +1,4 @@
-<section class="fade-panel fade-up py-24 bg-white">
+<section class="fade-panel fade-left py-24 bg-white">
 
     <div class="container mx-auto px-6">
 
@@ -24,7 +24,7 @@
                 <div class="card-img overflow-hidden rounded-xl">
 
                     <img
-                        src="{{ asset('images/smp/fasilitas/lapangan.jpeg') }}"
+                        src="{{ asset('images/smk/fasilitas/lapangan.jpg') }}"
                         class="w-full h-60 object-cover"
                     >
 
@@ -52,7 +52,7 @@
                 <div class="card-img overflow-hidden rounded-xl">
 
                     <img
-                        src="{{ asset('images/smp/fasilitas/masjid.jpg') }}"
+                        src="{{ asset('images/smk/fasilitas/masjid.jpg') }}"
                         class="w-full h-60 object-cover"
                     >
 
@@ -80,7 +80,7 @@
                 <div class="card-img overflow-hidden rounded-xl">
 
                     <img
-                        src="{{ asset('images/smp/fasilitas/parkiran.jpg') }}"
+                        src="{{ asset('images/smk/fasilitas/parkiran.jpg') }}"
                         class="w-full h-60 object-cover"
                     >
 
@@ -96,7 +96,7 @@
                 </div>
 
                 <h3 class="fasilitas-title">
-                    Parkiran
+                    Area Parkir
                 </h3>
 
             </div>
@@ -108,7 +108,7 @@
                 <div class="card-img overflow-hidden rounded-xl">
 
                     <img
-                        src="{{ asset('images/smp/fasilitas/perpustakaan.jpeg') }}"
+                        src="{{ asset('images/smk/fasilitas/perpustakaan.jpg') }}"
                         class="w-full h-60 object-cover"
                     >
 
@@ -124,7 +124,7 @@
                 </div>
 
                 <h3 class="fasilitas-title">
-                    Perpustakaan
+                    Ruang Perpustakaan
                 </h3>
 
             </div>
@@ -136,7 +136,7 @@
                 <div class="card-img overflow-hidden rounded-xl">
 
                     <img
-                        src="{{ asset('images/smp/fasilitas/kelas.jpg') }}"
+                        src="{{ asset('images/smk/fasilitas/kelas.jpg') }}"
                         class="w-full h-60 object-cover"
                     >
 
@@ -152,7 +152,7 @@
                 </div>
 
                 <h3 class="fasilitas-title">
-                    Kelas
+                    Ruang Kelas
                 </h3>
 
             </div>
@@ -164,7 +164,7 @@
                 <div class="card-img overflow-hidden rounded-xl">
 
                     <img
-                        src="{{ asset('images/smp/fasilitas/lab-ipa.jpeg') }}"
+                        src="{{ asset('images/smk/fasilitas/ruang-praktik.jpg') }}"
                         class="w-full h-60 object-cover"
                     >
 
@@ -180,7 +180,7 @@
                 </div>
 
                 <h3 class="fasilitas-title">
-                    Lab IPA
+                    Ruang Praktek Kejuruan
                 </h3>
 
             </div>
@@ -192,7 +192,7 @@
                 <div class="card-img overflow-hidden rounded-xl">
 
                     <img
-                        src="{{ asset('images/smp/fasilitas/lab-komputer.jpeg') }}"
+                        src="{{ asset('images/smk/fasilitas/lab-komputer.jpg') }}"
                         class="w-full h-60 object-cover"
                     >
 
@@ -212,6 +212,9 @@
                 </h3>
 
             </div>
+
+            
+                
 
 
         </div>

@@ -26,7 +26,7 @@
 
                 <iframe
                     class="w-full h-[300px] md:h-[420px]"
-                    src="https://www.youtube.com/embed/l2O5x5JjQ2c?autoplay=1&mute=1"
+                    src="https://www.youtube.com/embed/FUPQf2_GSts?autoplay=1&mute=0&start=18&end=137"
                     allow="autoplay; encrypted-media"
                     allowfullscreen>
                 </iframe>

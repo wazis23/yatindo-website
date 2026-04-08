@@ -7,6 +7,7 @@ use App\Models\Slider;
 use App\Models\Gallery;
 use App\Models\Album;
 use App\Models\Teacher;
+use App\Models\Major;
 
 class HomeController extends Controller
 {
@@ -106,6 +107,7 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get();
 
+           
         /* ===============================
         Hero Slider SMK
         =============================== */
@@ -165,7 +167,7 @@ class HomeController extends Controller
                 'teachers',
                 'majorName',
                 'majorTitle',
-                'majorLogo'
+                'majorLogo',
             )
         );
     }

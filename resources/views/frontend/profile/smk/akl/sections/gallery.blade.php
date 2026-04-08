@@ -24,20 +24,22 @@
 
             {{-- ITEM --}}
             @foreach ([
-                'images/akl/1.jpg',
-                'images/akl/2.jpg',
-                'images/akl/3.jpg',
-                'images/akl/4.jpg',
-                'images/akl/5.jpg',
-                'images/akl/6.jpg'
+                'images/smk/akl/kegiatan/1.jpg',
+                'images/smk/akl/kegiatan/2.jpg',
+                'images/smk/akl/kegiatan/3.jpg',
+                'images/smk/akl/kegiatan/4.jpg',
+                'images/smk/akl/kegiatan/5.jpg',
+                'images/smk/akl/kegiatan/6.jpg'
             ] as $img)
 
                 <div class="gallery-item overflow-hidden rounded-xl shadow cursor-pointer">
 
                     <img
                         src="{{ asset($img) }}"
-                        class="w-full h-64 object-cover transition duration-500 hover:scale-110 gallery-img"
-                    >
+                        class="w-full h-64 object-cover transition duration-500 hover:scale-110 gallery-img will-change-transform"
+                        loading="lazy"
+                        decoding="async"
+                        >
 
                 </div>
 

@@ -20,16 +20,16 @@
 
 
         {{-- GRID GALLERY --}}
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 fasilitas-grid">
 
             {{-- ITEM --}}
             @foreach ([
-                'images/tjkt/1.jpg',
-                'images/tjkt/2.jpg',
-                'images/tjkt/3.jpg',
-                'images/tjkt/4.jpg',
-                'images/tjkt/5.jpg',
-                'images/tjkt/6.jpg'
+                'images/smk/tjkt/kegiatan/1.jpg',
+                'images/smk/tjkt/kegiatan/2.jpg',
+                'images/smk/tjkt/kegiatan/3.jpg',
+                'images/smk/tjkt/kegiatan/4.jpg',
+                'images/smk/tjkt/kegiatan/5.jpg',
+                'images/smk/tjkt/kegiatan/6.jpg'
             ] as $img)
 
                 <div class="gallery-item overflow-hidden rounded-xl shadow cursor-pointer">

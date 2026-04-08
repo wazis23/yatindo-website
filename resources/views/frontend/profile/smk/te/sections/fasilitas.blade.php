@@ -20,13 +20,13 @@
 
 
         {{-- GRID LAB --}}
-        <div class="grid md:grid-cols-3 gap-10">
+        <div class="grid md:grid-cols-2 gap-10">
 
             {{-- LAB 1 --}}
             <div class="relative group rounded-xl overflow-hidden shadow-lg">
 
                 <img
-                    src="{{ asset('images/te/lab-elektronika.jpg') }}"
+                    src="{{ asset('images/smk/fasilitas/lab-te-dasar.jpg') }}"
                     class="w-full h-64 object-cover group-hover:scale-110 transition duration-500"
                 >
 
@@ -45,7 +45,7 @@
             <div class="relative group rounded-xl overflow-hidden shadow-lg">
 
                 <img
-                    src="{{ asset('images/te/lab-mikrokontroler.jpg') }}"
+                    src="{{ asset('images/smk/fasilitas/lab-te-mikrokontroler.jpg') }}"
                     class="w-full h-64 object-cover group-hover:scale-110 transition duration-500"
                 >
 
@@ -59,24 +59,6 @@
 
             </div>
 
-
-            {{-- LAB 3 --}}
-            <div class="relative group rounded-xl overflow-hidden shadow-lg">
-
-                <img
-                    src="{{ asset('images/te/lab-iot.jpg') }}"
-                    class="w-full h-64 object-cover group-hover:scale-110 transition duration-500"
-                >
-
-                <div class="absolute inset-0 bg-black/40 flex items-end">
-
-                    <h3 class="text-white text-lg font-semibold p-6">
-                        Lab IoT & Embedded System
-                    </h3>
-
-                </div>
-
-            </div>
 
         </div>
 

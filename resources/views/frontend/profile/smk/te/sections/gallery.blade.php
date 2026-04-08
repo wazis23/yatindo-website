@@ -6,7 +6,7 @@
         <div class="text-center mb-16">
 
             <h2 class="text-3xl md:text-4xl font-bold mb-4">
-                Kegiatan Siswa TJKT
+                Kegiatan Siswa Teknik Elektronika
             </h2>
 
             <div class="w-20 h-1 bg-yellow-400 mx-auto"></div>
@@ -20,16 +20,16 @@
 
 
         {{-- GRID GALLERY --}}
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 fasilitas-grid">
 
             {{-- ITEM --}}
             @foreach ([
-                'images/tjkt/1.jpg',
-                'images/tjkt/2.jpg',
-                'images/tjkt/3.jpg',
-                'images/tjkt/4.jpg',
-                'images/tjkt/5.jpg',
-                'images/tjkt/6.jpg'
+                'images/smk/te/kegiatan/1.png',
+                'images/smk/te/kegiatan/2.jpeg',
+                'images/smk/te/kegiatan/3.jpeg',
+                'images/smk/te/kegiatan/4.jpeg',
+                'images/smk/te/kegiatan/5.jpeg',
+                'images/smk/te/kegiatan/6.jpeg'
             ] as $img)
 
                 <div class="gallery-item overflow-hidden rounded-xl shadow cursor-pointer">

@@ -32,13 +32,13 @@
 
         {{-- PPDB --}}
         <a href="#ppdb-section" class="group relative overflow-hidden rounded-xl shadow-lg scroll-smooth">
-            <img src="/images/ppdb.jpg"
+            <img src="/images/spmb.png"
                  class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
 
             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center text-white text-center px-4">
                 <div>
-                    <h3 class="text-xl font-bold">PPDB Online</h3>
-                    <p class="text-xs mt-2">Penerimaan Peserta Didik Baru</p>
+                    <h3 class="text-xl font-bold">SPMB Online</h3>
+                    <p class="text-xs mt-2">Sistem Penerimaan Murid Baru</p>
                 </div>
             </div>
         </a>

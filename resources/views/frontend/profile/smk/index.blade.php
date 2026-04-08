@@ -20,9 +20,6 @@
 @include('frontend.profile.smk.sections.visi-misi')
 @endif
 
-@if(config('frontend.profile.smk.sections.keunggulan'))
-@include('frontend.profile.smk.sections.keunggulan')
-@endif
 
 @if(config('frontend.profile.smk.sections.guru'))
 @include('frontend.profile.smk.sections.guru')

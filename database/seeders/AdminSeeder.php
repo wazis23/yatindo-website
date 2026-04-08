@@ -41,6 +41,7 @@ class AdminSeeder extends Seeder
 
             // DATA
             'manage teachers',
+            'manage subjects',
 
             // SYSTEM
             'manage users',
@@ -83,7 +84,8 @@ class AdminSeeder extends Seeder
             'manage sliders',
             'manage gallery',
 
-            'manage teachers'
+            'manage teachers',
+            'manage subjects',
         ]);
 
         // CONTENT MAKER
@@ -96,6 +98,7 @@ class AdminSeeder extends Seeder
             'manage posts',
             
             'manage albums'
+            'manage galery',
         ]);
 
         /*
@@ -108,7 +111,7 @@ class AdminSeeder extends Seeder
             ['email' => 'superadmin@tintaemas.sch.id'],
             [
                 'name' => 'Super Administrator',
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'SuperAdmin123!')),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'Admin123!')),
             ]
         );
 

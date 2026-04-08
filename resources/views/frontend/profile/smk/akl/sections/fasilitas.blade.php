@@ -26,7 +26,7 @@
             <div class="relative group rounded-xl overflow-hidden shadow-lg">
 
                 <img
-                    src="{{ asset('images/akl/lab-akl.jpg') }}"
+                    src="{{ asset('images/smk/fasilitas/lab-akl.jpg') }}"
                     class="w-full h-64 object-cover group-hover:scale-110 transition duration-500"
                 >
 
@@ -45,7 +45,7 @@
             <div class="relative group rounded-xl overflow-hidden shadow-lg">
 
                 <img
-                    src="{{ asset('images/akl/bank-mini.jpg') }}"
+                    src="{{ asset('images/smk/fasilitas/bank-mini.jpg') }}"
                     class="w-full h-64 object-cover group-hover:scale-110 transition duration-500"
                 >
 

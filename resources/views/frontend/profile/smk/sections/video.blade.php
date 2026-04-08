@@ -9,7 +9,7 @@
             <div>
 
                 <h2 class="text-3xl md:text-4xl font-bold mb-6">
-                    SMP TINTA EMAS INDONESIA
+                    SMK TINTA EMAS INDONESIA
                 </h2>
 
                 <div class="w-20 h-1 bg-yellow-400 mb-8"></div>
@@ -19,8 +19,8 @@
                     <div class="akreditasi-box mb-8">
 
                         <img
-                            src="{{ asset('images/smp/akreditasi-smp.png') }}"
-                            alt="Akreditasi SMP Tinta Emas Indonesia"
+                            src="{{ asset('images/smk/akreditasi-smk.png') }}"
+                            alt="Akreditasi SMK Tinta Emas Indonesia"
                         >
 
                         <p class="mt-4 font-semibold text-gray-800">
@@ -62,9 +62,9 @@
                 <div class="video-wrapper">
 
                     <iframe
-                        src="https://www.youtube.com/embed/VIDEO_ID"
-                        title="Video Profil SMP Tinta Emas Indonesia"
-                        frameborder="0"
+                        class="w-full h-[300px] md:h-[420px]"
+                        src="https://www.youtube.com/embed/FUPQf2_GSts?autoplay=1&mute=0"
+                        allow="autoplay; encrypted-media"
                         allowfullscreen>
                     </iframe>
 
