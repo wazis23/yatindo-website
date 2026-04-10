@@ -93,7 +93,30 @@ Route::get('/galeri/{id}', [AlbumPageController::class,'show'])
 
     });
 
+    Route::prefix('struktur')->name('struktur.')->group(function () {
 
+        Route::get('/yayasan', function () {
+            return view('frontend.struktur', [
+                'title' => 'Struktur Yayasan',
+                'image' => 'images/struktur/yayasan.jpg'
+            ]);
+        })->name('yayasan');
+
+        Route::get('/smp', function () {
+            return view('frontend.struktur', [
+                'title' => 'Struktur SMP',
+                'image' => 'images/struktur/smp.jpg'
+            ]);
+        })->name('smp');
+
+        Route::get('/smk', function () {
+            return view('frontend.struktur', [
+                'title' => 'Struktur SMK',
+                'image' => 'images/struktur/smk.jpg '
+            ]);
+        })->name('smk');
+
+    });
 /*
 |--------------------------------------------------------------------------
 | AUTH ROUTES (BREEZE)
@@ -116,7 +139,6 @@ use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\Admin\AlbumController as AdminAlbumController;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\Admin\SubjectController;
-use App\Http\Controllers\Admin\StructureController;
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES (PROTECTED)

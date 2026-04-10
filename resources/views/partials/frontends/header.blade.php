@@ -74,12 +74,28 @@ class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
                     </div>
                 </div>
 
-                <a href="#">Struktur Yayasan</a>
+                
             </div>
         </div>
 
-        <a href="{{ route('frontend.posts.index') }}" class="nav-link {{ request()->is('berita*') ? 'active-nav' : '' }}">Berita</a>
-        <a href="#" class="nav-link">Kontak</a>
+        {{-- ✅ STRUKTUR (SUDAH BENAR-BENAR TERPISAH) --}}
+        <div class="relative group">
+            <button class="nav-link flex items-center gap-1">
+                Struktur ▾
+            </button>
+
+            {{-- ✅ FIX DI SINI: pakai dropdown BUKAN dropdown-sub --}}
+            <div class="dropdown">
+                <a href="{{ route('struktur.yayasan') }}">Yayasan</a>
+                <a href="{{ route('struktur.smp') }}">SMP</a>
+                <a href="{{ route('struktur.smk') }}">SMK</a>
+            </div>
+        </div>
+
+        <a href="{{ route('frontend.posts.index') }}" 
+        class="nav-link {{ request()->is('berita*') ? 'active-nav' : '' }}">
+        Berita
+        </a>
 
     </nav>
 
@@ -146,17 +162,21 @@ class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
             </a>
         </div>
 
-        <a href="#" class="block py-1">Struktur Yayasan</a>
+        {{-- ✅ STRUKTUR DIPISAH TOTAL --}}
+        <button class="mobile-toggle w-full text-left py-2 flex justify-between items-center">
+            Struktur
+            <span>▾</span>
+        </button>
 
-    </div>
+        <div class="mobile-sub hidden pl-4 space-y-2">
+            <a href="{{ route('struktur.yayasan') }}">Yayasan</a>
+            <a href="{{ route('struktur.smp') }}">SMP</a>
+            <a href="{{ route('struktur.smk') }}">SMK</a>
+        </div>
 
-    <a href="{{ route('frontend.posts.index') }}" class="block py-2">
-        Berita
-    </a>
-
-    <a href="#" class="block py-2">
-        Kontak
-    </a>
+        <a href="{{ route('frontend.posts.index') }}" class="block py-2">
+            Berita
+        </a>
 
 </div>
 
