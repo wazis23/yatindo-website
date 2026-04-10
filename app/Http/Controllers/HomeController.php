@@ -8,6 +8,7 @@ use App\Models\Gallery;
 use App\Models\Album;
 use App\Models\Teacher;
 use App\Models\Major;
+use App\Models\OrganizationalStructure;
 
 class HomeController extends Controller
 {
@@ -170,5 +171,35 @@ class HomeController extends Controller
                 'majorLogo',
             )
         );
+    }
+    
+    public function strukturSmk()
+    {
+        $data = OrganizationalStructure::where('unit','smk')
+            ->whereNull('parent_id')
+            ->with('children.children.children')
+            ->get();
+
+        return view('frontend.struktur.smk', compact('data'));
+    }
+
+    public function strukturSmp()
+    {
+        $data = OrganizationalStructure::where('unit','smp')
+            ->whereNull('parent_id')
+            ->with('children.children.children')
+            ->get();
+
+        return view('frontend.struktur.smp', compact('data'));
+    }
+
+    public function strukturYayasan()
+    {
+        $data = OrganizationalStructure::where('unit','yayasan')
+            ->whereNull('parent_id')
+            ->with('children.children.children')
+            ->get();
+
+        return view('frontend.struktur.yayasan', compact('data'));
     }
 }

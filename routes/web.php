@@ -86,6 +86,11 @@ Route::get('/galeri/{id}', [AlbumPageController::class,'show'])
             Route::get('/smk/{major}', [HomeController::class, 'major'])
                 ->name('major');
 
+            Route::get('/struktur/yayasan', [HomeController::class, 'strukturYayasan'])->name('struktur.yayasan');
+            Route::get('/struktur/smp', [HomeController::class, 'strukturSmp'])->name('struktur.smp');
+            Route::get('/struktur/smk', [HomeController::class, 'strukturSmk'])->name('struktur.smk');
+
+
     });
 
 
@@ -111,6 +116,7 @@ use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\Admin\AlbumController as AdminAlbumController;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\StructureController;
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES (PROTECTED)
@@ -254,6 +260,8 @@ Route::prefix('admin')
         */
         Route::resource('subjects', SubjectController::class)
             ->middleware('permission:manage subjects');
+
+       
     });
 
 

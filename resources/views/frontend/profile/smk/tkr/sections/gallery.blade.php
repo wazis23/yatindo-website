@@ -24,12 +24,12 @@
 
             {{-- ITEM --}}
             @foreach ([
-                'images/tkr/1.jpg',
-                'images/tkr/2.jpg',
-                'images/tkr/3.jpg',
-                'images/tkr/4.jpg',
-                'images/tkr/5.jpg',
-                'images/tkr/6.jpg'
+                'images/smk/kegiatan/tkr/1.jpg',
+                'images/smk/kegiatan/tkr/2.jpg',
+                'images/smk/kegiatan/tkr/3.jpg',
+                'images/smk/kegiatan/tkr/4.jpg',
+                'images/smk/kegiatan/tkr/5.jpg',
+                'images/smk/kegiatan/tkr/6.jpg'
             ] as $img)
 
                 <div class="gallery-item overflow-hidden rounded-xl shadow cursor-pointer">
