@@ -156,22 +156,28 @@ if(filterButtons.length){
    HERO SLIDER
 ========================================================= */
 
-const heroSlides = document.querySelectorAll(".hero-slide");
 
-if(heroSlides.length){
+const slides = document.querySelectorAll(".slider-item");
 
+if(slides.length){
     let index = 0;
 
+    function showSlide(i){
+        slides.forEach((slide, idx)=>{
+            slide.classList.remove("opacity-100","z-10");
+            slide.classList.add("opacity-0","z-0");
+
+            if(idx === i){
+                slide.classList.remove("opacity-0","z-0");
+                slide.classList.add("opacity-100","z-10");
+            }
+        });
+    }
+
     setInterval(()=>{
-
-        heroSlides[index].classList.remove("active");
-
-        index = (index + 1) % heroSlides.length;
-
-        heroSlides[index].classList.add("active");
-
-    },6000);
-
+        index = (index + 1) % slides.length;
+        showSlide(index);
+    },4000);
 }
 
 
