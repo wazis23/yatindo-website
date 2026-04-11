@@ -95,10 +95,8 @@ class AdminSeeder extends Seeder
             'create posts',
             'edit posts',
             'delete posts',
-            'manage posts',
-            
-            'manage albums'
-            'manage galery',
+            'manage albums',
+            'manage gallery',
         ]);
 
         /*

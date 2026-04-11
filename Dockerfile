@@ -1,14 +1,22 @@
 FROM php:8.2-fpm
 
-# Install dependency
+# install depencies
 RUN apt-get update && apt-get install -y \
-    git curl zip nano unzip \
-    nodejs npm \
-    libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+    nginx \
+    git \
+    curl \
+    zip \
+    unzip \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    nodejs \
+    npm \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 
 WORKDIR /var/www
 
@@ -23,13 +31,20 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Install frontend & build
 RUN npm install && npm run build
-
 # Permission
-RUN chown -R www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
 
-# Laravel optimize (tanpa migrate)
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
-    
+RUN cp .env.example .env
+# Copy nginx config
+COPY nginx/default.conf /etc/nginx/sites-available/default
+
+RUN php artisan storage:link
+
+# Expose port
+EXPOSE 80
+
+# Start service
+CMD service nginx start && php-fpm
+
 CMD ["php-fpm"]
