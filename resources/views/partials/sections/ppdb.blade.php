@@ -26,7 +26,7 @@
         <div class="flex flex-col sm:flex-row justify-center gap-5">
 
             {{-- Button Daftar --}}
-            <a href="#"
+            <a href="https://ppdb.smp-smktintaemas.sch.id"
                class="bg-yellow-400 text-black font-bold px-8 py-4 rounded-xl shadow-xl hover:scale-105 hover:bg-yellow-300 transition duration-300">
                 Daftar PPDB Sekarang
             </a>

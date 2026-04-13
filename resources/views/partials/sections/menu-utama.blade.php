@@ -4,7 +4,7 @@
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 fade-panel transition-all duration-700 ease-out">
 
         {{-- SMP --}}
-        <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg">
+        <a href="{{ route('profile.smp') }}" class="group relative overflow-hidden rounded-xl shadow-lg">
             <img src="/images/smp.jpg"
                  class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
 
@@ -18,7 +18,7 @@
         </a>
 
         {{-- SMK --}}
-        <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg">
+        <a href="{{ route('profile.smk') }}" class="group relative overflow-hidden rounded-xl shadow-lg">
             <img src="/images/smk.jpg"
                  class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
 
@@ -44,7 +44,7 @@
         </a>
 
         {{-- E-Learning --}}
-        <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg">
+        <a href="https://edu.smp-smktintaemas.sch.id" class="group relative overflow-hidden rounded-xl shadow-lg">
             <img src="/images/elearning.jpg"
                  class="w-full h-56 object-cover transform group-hover:scale-110 transition duration-500">
 
